@@ -33,6 +33,7 @@ kotlin {
             isStatic = true
         }
         pod("FirebaseCore") { linkOnly = true }
+        pod("GoogleSignIn") { linkOnly = true }
     }
     
     sourceSets {
@@ -44,6 +45,8 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(project(":utils"))
+            implementation(project(":signin"))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -58,7 +61,7 @@ android {
         minSdk = 29
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }

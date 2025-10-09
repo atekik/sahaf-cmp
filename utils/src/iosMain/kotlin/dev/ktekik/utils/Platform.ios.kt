@@ -1,0 +1,3 @@
+package dev.ktekik.utils
+
+actual fun platform() = "iOS"

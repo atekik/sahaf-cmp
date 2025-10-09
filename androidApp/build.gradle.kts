@@ -41,6 +41,15 @@ android {
             jvmTarget = JvmTarget.JVM_17
         }
     }
+
+    signingConfigs {
+        create("sahafDebug") {
+            storeFile = file("~/debugSahaf")
+            storePassword = "Jul14N03lT3k1k#9"
+            keyAlias = "key0"
+            keyPassword = "LucyK414T3k1k#9"
+        }
+    }
 }
 
 dependencies {
