@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "565843012089",
+    "project_id": "sahaf-5c98c",
+    "storage_bucket": "sahaf-5c98c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:565843012089:android:d06bd341e694b1c08a3528",
+        "android_client_info": {
+          "package_name": "dev.ktekik.sahaf.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "565843012089-d7fukjvm12ekg8s33ujjrf3ponn66vun.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.ktekik.sahaf.android",
+            "certificate_hash": "91a27f0032aff092e35edf0bc5736ef0b5eeb121"
+          }
+        },
+        {
+          "client_id": "565843012089-054i7pvbl8j7indc5nscqoeh5opjktes.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0NtIQgPA6tFqeeUwiyqG5Rhjt8-tVfEQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "565843012089-054i7pvbl8j7indc5nscqoeh5opjktes.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "565843012089-1nsrlngtphe7rd30mpp7k73uhd1c8hsh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ktekik.iosApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

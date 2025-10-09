@@ -17,3 +17,5 @@ dependencyResolutionManagement {
 rootProject.name = "Sahaf"
 include(":androidApp")
 include(":composeApp")
+include(":utils")
+include(":signin")
