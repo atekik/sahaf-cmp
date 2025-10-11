@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -105,11 +107,25 @@ kotlin {
     }
 }
 
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+
 android {
     namespace = "dev.ktekik.sahaf"
     compileSdk = 35
+    buildFeatures.buildConfig = true
     defaultConfig {
         minSdk = 29
+
+        buildConfigField(
+            "String",
+            "GOOGLE_CLIENT_ID",
+            "\"${localProperties.getProperty("clientId")}\""
+        )
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
