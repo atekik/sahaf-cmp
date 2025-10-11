@@ -3,9 +3,7 @@ package dev.ktekik.signin
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import dev.gitlive.firebase.Firebase
-import dev.gitlive.firebase.auth.GoogleAuthProvider
-import dev.gitlive.firebase.auth.auth
+import dev.ktekik.signin.usecase.FirebaseAuthUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -28,11 +26,7 @@ fun GoogleButton(
         modifier = modifier,
         onResponse = { response ->
             coroutineScope.launch(Dispatchers.IO) {
-                response.doOnSuccess { account ->
-                    Firebase.auth.signInWithCredential(
-                        GoogleAuthProvider.credential(account.idToken, account.accessToken)
-                    )
-                }
+                FirebaseAuthUseCase(response).invoke()
 
                 withContext(Dispatchers.Main) { onResponse(response) }
             }

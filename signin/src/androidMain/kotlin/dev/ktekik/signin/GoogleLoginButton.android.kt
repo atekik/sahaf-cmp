@@ -1,16 +1,16 @@
 package dev.ktekik.signin
 
 import android.app.Activity
-import android.util.Log
-import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import dev.ktekik.sahaf.BuildConfig
 import dev.ktekik.signin.models.GoogleAccount
 import dev.ktekik.signin.models.Profile
 
@@ -43,12 +43,12 @@ internal actual fun GoogleLoginButton(
     modifier: Modifier
 ) {
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken("565843012089-054i7pvbl8j7indc5nscqoeh5opjktes.apps.googleusercontent.com")
-        .requestServerAuthCode("565843012089-054i7pvbl8j7indc5nscqoeh5opjktes.apps.googleusercontent.com")
+        .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
+        .requestServerAuthCode(BuildConfig.GOOGLE_CLIENT_ID)
         .requestEmail()
         .build()
 
-    val googleSignInClient = GoogleSignIn.getClient(LocalActivity.current!!, gso)
+    val googleSignInClient = GoogleSignIn.getClient(LocalContext.current, gso)
 
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -63,8 +63,6 @@ internal actual fun GoogleLoginButton(
                 } else {
                     AuthResponse.Error(e.fullErrorMessage)
                 }.also(onResponse)
-
-                Log.w("Toto", "Google sign in failed", e)
             }
 
         }

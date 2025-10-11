@@ -44,6 +44,7 @@ fun App() {
 
                         GoogleButton(
                             onResponse = {
+
                                 (it as? AuthResponse.Success)?.account?.profile?.name?.let { name ->
                                     userName = name
                                 }

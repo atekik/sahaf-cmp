@@ -37,6 +37,12 @@ kotlin {
     }
     
     sourceSets {
+        androidMain.dependencies {
+            implementation(libs.koin.android)
+
+            implementation(libs.koin.androidx.compose)
+        }
+
         commonMain.dependencies {
             //put your multiplatform dependencies here
             implementation(compose.ui)
@@ -47,6 +53,9 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(project(":utils"))
             implementation(project(":signin"))
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
