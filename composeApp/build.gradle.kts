@@ -39,7 +39,6 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             implementation(libs.koin.android)
-
             implementation(libs.koin.androidx.compose)
         }
 
@@ -54,8 +53,8 @@ kotlin {
             implementation(project(":utils"))
             implementation(project(":signin"))
             implementation(project.dependencies.platform(libs.koin.bom))
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
+            implementation(libs.bundles.orbit)
+            implementation(libs.bundles.koin)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

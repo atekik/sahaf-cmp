@@ -75,7 +75,9 @@ kotlin {
 
                 implementation(libs.firebase.gitlive.common)
                 implementation(libs.firebase.gitlive.auth)
-                // Add KMP dependencies here
+                implementation(project.dependencies.platform(libs.koin.bom))
+                implementation(libs.bundles.orbit)
+                implementation(libs.bundles.koin)
             }
         }
 
@@ -92,6 +94,8 @@ kotlin {
                 // dependencies declared in commonMain.
                 implementation(libs.play.services.auth)
                 implementation(libs.androidx.activity.compose)
+                implementation(libs.koin.android)
+                implementation(libs.koin.androidx.compose)
             }
         }
 
