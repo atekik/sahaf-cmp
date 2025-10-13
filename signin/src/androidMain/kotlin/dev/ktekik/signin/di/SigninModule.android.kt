@@ -5,18 +5,41 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import dev.ktekik.sahaf.BuildConfig
-import dev.ktekik.signin.fullErrorMessage
-import dev.ktekik.signin.googleAccount
 import dev.ktekik.signin.models.GoogleAccount
+import dev.ktekik.signin.models.Profile
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
 actual fun platformModule(): Module = module {
     factory<ActivityResultContract<Int, SignInResult>> { AuthResultContract() }
 }
+
+val GoogleSignInAccount.googleAccount: GoogleAccount
+    get() = GoogleAccount(
+        idToken = idToken.orEmpty(),
+        accessToken = serverAuthCode.orEmpty(),
+        profile = Profile(
+            name = displayName.orEmpty(),
+            familyName = familyName.orEmpty(),
+            givenName = givenName.orEmpty(),
+            email = email.orEmpty(),
+            picture = photoUrl?.toString().orEmpty()
+        ),
+    )
+
+val ApiException.fullErrorMessage: String
+    get() {
+        return listOfNotNull(
+            "code: $statusCode",
+            message?.let { "message: $message" },
+            "localizedMessage: $localizedMessage",
+            "status: $status"
+        ).joinToString("\n")
+    }
 
 private class AuthResultContract : ActivityResultContract<Int, SignInResult>() {
     override fun createIntent(context: Context, input: Int): Intent {
