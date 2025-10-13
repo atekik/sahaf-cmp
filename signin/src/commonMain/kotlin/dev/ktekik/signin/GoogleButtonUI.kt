@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,7 +21,8 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 internal fun GoogleButtonUI(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showProgressBar: Boolean = false,
 ) {
     Button(
         modifier = modifier,
@@ -39,6 +41,10 @@ internal fun GoogleButtonUI(
             contentDescription = "Google Icon"
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Text("Continue with Google")
+        if (showProgressBar) {
+            CircularProgressIndicator()
+        } else {
+            Text("Continue with Google")
+        }
     }
 }

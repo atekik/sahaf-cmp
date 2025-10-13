@@ -1,20 +1,21 @@
 package dev.ktekik.signin
 
-import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import com.google.android.gms.auth.api.signin.GoogleSignIn
+import androidx.compose.ui.tooling.preview.Preview
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import dev.ktekik.sahaf.BuildConfig
+import dev.ktekik.signin.di.SIGN_IN_REQUEST_CODE
+import dev.ktekik.signin.di.SignInResult
 import dev.ktekik.signin.models.GoogleAccount
 import dev.ktekik.signin.models.Profile
+import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
+import org.orbitmvi.orbit.compose.collectAsState
 
-private val GoogleSignInAccount.googleAccount: GoogleAccount
+val GoogleSignInAccount.googleAccount: GoogleAccount
     get() = GoogleAccount(
         idToken = idToken.orEmpty(),
         accessToken = serverAuthCode.orEmpty(),
@@ -27,7 +28,7 @@ private val GoogleSignInAccount.googleAccount: GoogleAccount
         ),
     )
 
-private val ApiException.fullErrorMessage: String
+val ApiException.fullErrorMessage: String
     get() {
         return listOfNotNull(
             "code: $statusCode",
@@ -42,32 +43,37 @@ internal actual fun GoogleLoginButton(
     onResponse: (AuthResponse) -> Unit,
     modifier: Modifier
 ) {
-    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-        .requestIdToken(BuildConfig.GOOGLE_CLIENT_ID)
-        .requestServerAuthCode(BuildConfig.GOOGLE_CLIENT_ID)
-        .requestEmail()
-        .build()
 
-    val googleSignInClient = GoogleSignIn.getClient(LocalContext.current, gso)
+    val signInViewModel: SignInViewModel = koinViewModel()
+    val authResultContract = koinInject<ActivityResultContract<Int, SignInResult>>()
+
+    val state = signInViewModel.collectAsState()
 
     val launcher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            try {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-                val account = task.getResult(ApiException::class.java)
-
-                onResponse(AuthResponse.Success(account.googleAccount))
-            } catch (e: ApiException) {
-                if (result.resultCode == Activity.RESULT_CANCELED) {
-                    AuthResponse.Cancelled
-                } else {
-                    AuthResponse.Error(e.fullErrorMessage)
-                }.also(onResponse)
-            }
-
+        rememberLauncherForActivityResult(contract = authResultContract) { result ->
+            signInViewModel.onSignInResult(result)
         }
 
-    GoogleButtonUI(modifier = modifier, onClick = {
-        launcher.launch(googleSignInClient.signInIntent)
-    })
+    state.value.account?.let {
+        onResponse(AuthResponse.Success(it))
+    } ?: state.value.signInError?.let {
+        onResponse(AuthResponse.Error(it))
+    } ?: state.value.isCancelled.let {
+        onResponse(AuthResponse.Cancelled)
+    }
+
+    GoogleButtonUI(
+        modifier = modifier,
+        onClick = {
+            launcher.launch(SIGN_IN_REQUEST_CODE)
+            signInViewModel.onSignInClick()
+        },
+        showProgressBar = state.value.progressBar
+    )
+}
+
+@Preview
+@Composable
+private fun GoogleLoginButtonPreview() {
+    GoogleLoginButton(onResponse = {})
 }

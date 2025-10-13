@@ -1,4 +1,4 @@
-package dev.ktekik.sahaf
+package dev.ktekik.sahaf.android
 
 import android.app.Application
 import dev.ktekik.sahaf.di.initKoin

@@ -1,25 +1,37 @@
 package dev.ktekik.signin
 
 import androidx.lifecycle.ViewModel
-import com.google.android.gms.auth.api.signin.GoogleSignInResult
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import dev.ktekik.signin.di.SignInResult
+import dev.ktekik.signin.models.GoogleAccount
+import org.orbitmvi.orbit.Container
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.viewmodel.container
 
 data class SignInState(
-    val isSignInSuccessful: Boolean = false,
+    val progressBar: Boolean = false,
+    val account: GoogleAccount? = null,
+    val isCancelled: Boolean = false,
     val signInError: String? = null
 )
 
-class SignInViewModel : ViewModel() {
-    private val _state = MutableStateFlow(SignInState())
-    val state = _state.asStateFlow()
+class SignInViewModel : ViewModel(), ContainerHost<SignInState, Unit> {
 
-    fun onSignInResult(result: GoogleSignInResult) {
-//        _state.update { it.copy(isSignInSuccessful = result.data != null, signInError = result.errorMessage) }
+    fun onSignInClick() {
+        intent {
+            reduce { SignInState(progressBar = true) }
+        }
     }
 
-    fun resetState() {
-        _state.update { SignInState() }
+    // todo look into hoisting this state up instead of using callbacks
+    fun onSignInResult(result: SignInResult) {
+        intent {
+            when (result) {
+                is SignInResult.Success -> reduce { SignInState(account = result.account) }
+                is SignInResult.Error -> reduce { SignInState(signInError = result.message) }
+                is SignInResult.Cancelled -> reduce { SignInState(isCancelled = true) }
+            }
+        }
     }
+
+    override val container: Container<SignInState, Unit> = container(SignInState())
 }
