@@ -7,13 +7,7 @@ import dev.ktekik.signin.AuthResponse
 
 internal class FirebaseAuthUseCase(val authResponse: AuthResponse) : UseCase {
     override suspend fun invoke() {
-        firebaseAuthExecutor.execute(this)
-    }
-}
-
-internal val firebaseAuthExecutor = object : UseCaseExecutor<FirebaseAuthUseCase> {
-    override suspend fun execute(useCase: FirebaseAuthUseCase) {
-        useCase.authResponse.doOnSuccess { account ->
+        authResponse.doOnSuccess { account ->
             Firebase.auth.signInWithCredential(
                 GoogleAuthProvider.credential(account.idToken, account.accessToken)
             )
