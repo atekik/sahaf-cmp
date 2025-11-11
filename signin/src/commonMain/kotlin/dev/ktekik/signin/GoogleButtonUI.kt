@@ -6,14 +6,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import dev.ktekik.utils.LocalResources
 import org.jetbrains.compose.resources.painterResource
@@ -27,24 +27,38 @@ internal fun GoogleButtonUI(
     Button(
         modifier = modifier,
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color.White,
-            contentColor = Color.Black
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = 12.dp,
+            pressedElevation = 16.dp,
+            focusedElevation = 10.dp
         ),
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, Color.LightGray),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
+        shape = MaterialTheme.shapes.extraLarge,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.background),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
     ) {
+        Spacer(modifier = Modifier.width(16.dp))
+
         Image(
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.size(32.dp),
             painter = painterResource(LocalResources.current.drawables.googleIcon),
             contentDescription = "Google Icon"
         )
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(16.dp))
         if (showProgressBar) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(
+                color = LocalContentColor.current,
+            )
         } else {
-            Text("Continue with Google")
+            Text(
+                text = "Sign Up With Google",
+                color = LocalContentColor.current,
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
+        Spacer(modifier = Modifier.width(16.dp))
     }
 }
