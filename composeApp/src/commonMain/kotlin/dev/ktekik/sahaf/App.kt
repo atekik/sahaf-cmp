@@ -1,82 +1,113 @@
 package dev.ktekik.sahaf
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.paint
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import dev.ktekik.sahaf.cloud.Reader
+import dev.ktekik.sahaf.navigation.NavigationViewModel
 import dev.ktekik.sahaf.utils.ResourcesImpl
-import dev.ktekik.signin.AuthResponse
-import dev.ktekik.signin.GoogleButton
+import dev.ktekik.signin.models.Profile
 import dev.ktekik.utils.LocalResources
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.uuid.ExperimentalUuidApi
+
+@Composable
+fun WelcomeScreen(viewModel: NavigationViewModel) {
+    CompositionLocalProvider(LocalResources provides ResourcesImpl()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .paint( // Use the .paint() modifier
+                    painter = painterResource(LocalResources.current.drawables.background),
+                    contentScale = ContentScale.Crop,
+                    alpha = .8f
+                )
+        ) {
+
+            Image(
+                painter = painterResource(LocalResources.current.drawables.logo),
+                contentDescription = "App Logo",
+                modifier = Modifier.align(Alignment.Center)
+            )
+            Button(
+                modifier = Modifier.align(Alignment.BottomCenter).padding(
+                    horizontal = 32.dp,
+                    vertical = 128.dp
+                ).fillMaxWidth(),
+                onClick = { viewModel.navigateToGreeting() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 12.dp,
+                    pressedElevation = 16.dp,
+                    focusedElevation = 10.dp
+                ),
+                shape = MaterialTheme.shapes.extraLarge,
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
+            ) {
+                Text(text = "Get Started",
+                    color = LocalContentColor.current,
+                    style = MaterialTheme.typography.titleLarge,
+                )
+            }
+        }
+    }
+}
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
-        Column(
-            modifier = Modifier.fillMaxSize().background(Color.White),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+    // Preview version without ViewModel
+    CompositionLocalProvider(LocalResources provides ResourcesImpl()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .paint(
+                    painter = painterResource(LocalResources.current.drawables.background),
+                    contentScale = ContentScale.Crop,
+                    alpha = .8f
+                )
         ) {
-            CompositionLocalProvider(LocalResources provides ResourcesImpl()) {
-                MaterialTheme {
-                    var snackbarMessage by remember { mutableStateOf("") }
-
-                    Column(
-                        modifier = Modifier.weight(1f).background(Color.White),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        var userName: String by remember { mutableStateOf("") }
-
-                        GoogleButton(
-                            onResponse = {
-                                (it as? AuthResponse.Success)?.account?.profile?.name?.let { name ->
-                                    userName = name
-                                    snackbarMessage = ""
-                                }
-
-                                (it as? AuthResponse.Error)?.message?.let { message ->
-                                    userName = ""
-                                    snackbarMessage = message
-                                }
-
-                                (it as? AuthResponse.Cancelled)?.let {
-                                    userName = ""
-                                    snackbarMessage = "Error: Cancelled"
-                                }
-                            }
-                        )
-
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        if (userName.isNotEmpty()) {
-                            Text("Welcome $userName")
-                        } else if (snackbarMessage.isNotEmpty()) {
-                            Text(
-                                text = snackbarMessage,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.error // Use your theme's error color
-                            )
-                        }
-                    }
-                }
-            }
+            Image(
+                painter = painterResource(LocalResources.current.drawables.logo),
+                contentDescription = "App Logo",
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
+}
+
+@OptIn(ExperimentalUuidApi::class)
+fun Profile.toReader(): Reader {
+    return Reader(
+        name = this.name,
+        emailRelay = this.email,
+        pictureURL = this.picture,
+        activeListings = emptySet(),
+        zipcode = "",
+        avgRating = 0.0,
+        followers = emptySet(),
+        following = emptySet(),
+        geofenceFiftyKms = emptySet(),
+        devices = emptySet(), // Fetch device id
+        readerId = null
+    )
 }

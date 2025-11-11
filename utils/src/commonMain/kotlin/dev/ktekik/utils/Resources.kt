@@ -8,4 +8,8 @@ interface Resources {
 
 interface Drawables {
     val googleIcon: DrawableResource
+
+    val background: DrawableResource
+
+    val logo: DrawableResource
 }
