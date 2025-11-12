@@ -2,6 +2,7 @@ package dev.ktekik.sahaf.theming
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
@@ -35,5 +36,12 @@ val typography = Typography(
         fontSize = 12.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp
+    ),
+    headlineLarge = TextStyle(
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 36.sp,
+        lineHeight = 42.sp,
+        letterSpacing = 0.sp,
+        fontFamily = FontFamily.Serif
     )
 )

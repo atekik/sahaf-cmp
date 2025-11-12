@@ -4,6 +4,8 @@ import dev.ktekik.utils.Drawables
 import dev.ktekik.utils.Resources
 import org.jetbrains.compose.resources.DrawableResource
 import sahaf.composeapp.generated.resources.Res
+import sahaf.composeapp.generated.resources.book_dark_primary
+import sahaf.composeapp.generated.resources.book_light_primary
 import sahaf.composeapp.generated.resources.ic_google
 import sahaf.composeapp.generated.resources.logo
 import sahaf.composeapp.generated.resources.sahafBackground
@@ -23,4 +25,9 @@ private class DrawablesImpl: Drawables {
 
     override val logo: DrawableResource
         get() = Res.drawable.logo
+
+    override val bookLight: DrawableResource
+        get() = Res.drawable.book_light_primary
+    override val bookDark: DrawableResource
+        get() = Res.drawable.book_dark_primary
 }

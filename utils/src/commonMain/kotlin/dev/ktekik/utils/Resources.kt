@@ -12,4 +12,8 @@ interface Drawables {
     val background: DrawableResource
 
     val logo: DrawableResource
+
+    val bookLight: DrawableResource
+
+    val bookDark: DrawableResource
 }
