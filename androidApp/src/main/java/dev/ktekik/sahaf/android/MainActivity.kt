@@ -9,7 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.firebase.FirebaseApp
-import dev.ktekik.sahaf.App
+import dev.ktekik.sahaf.navigation.NavHost
+import dev.ktekik.sahaf.theming.SahafTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,12 +19,12 @@ class MainActivity : ComponentActivity() {
         FirebaseApp.initializeApp(this.application)
 
         setContent {
-            MyApplicationTheme {
+            SahafTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    App()
+                    NavHost()
                 }
             }
         }
@@ -38,7 +39,7 @@ fun GreetingView(text: String) {
 @Preview
 @Composable
 fun DefaultPreview() {
-    MyApplicationTheme {
+    SahafTheme {
         GreetingView("Hello, Android!")
     }
 }

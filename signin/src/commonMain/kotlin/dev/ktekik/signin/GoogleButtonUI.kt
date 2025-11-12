@@ -4,6 +4,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -14,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.ktekik.utils.LocalResources
 import org.jetbrains.compose.resources.painterResource
@@ -25,7 +28,10 @@ internal fun GoogleButtonUI(
     showProgressBar: Boolean = false,
 ) {
     Button(
-        modifier = modifier,
+        modifier = modifier.padding(
+            horizontal = 16.dp,
+            vertical = 64.dp
+        ).fillMaxWidth(),
         onClick = onClick,
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 12.dp,
@@ -36,8 +42,8 @@ internal fun GoogleButtonUI(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.background),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface
+            containerColor = MaterialTheme.colorScheme.onPrimary,
+            contentColor = MaterialTheme.colorScheme.primary
         ),
     ) {
         Spacer(modifier = Modifier.width(16.dp))
@@ -56,7 +62,8 @@ internal fun GoogleButtonUI(
             Text(
                 text = "Sign Up With Google",
                 color = LocalContentColor.current,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold
             )
         }
         Spacer(modifier = Modifier.width(16.dp))

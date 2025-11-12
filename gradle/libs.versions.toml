@@ -17,6 +17,8 @@ play-services-auth = "21.0.0"
 gitlive-firebase = "1.10.4"
 koin-bom = "3.5.3"
 orbit = "10.0.0"
+ktor = "2.3.12"
+compose-navigation = "2.9.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -26,6 +28,7 @@ android-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", versio
 android-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "android-compose" }
 android-compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "android-compose" }
 android-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
+compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "compose-navigation"}
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-crashlyticsKtx = { module = "com.google.firebase:firebase-crashlytics-ktx", version.ref = "firebase-crashlytics" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
