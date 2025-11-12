@@ -11,7 +11,8 @@ fun SahafTheme(
     darkTheme: Boolean = isSystemInDarkTheme(), // Checks if your system is in dark theme mode.
     content: @Composable () -> Unit
 ) {
-    val colors = if (darkTheme) LightColorScheme else LightColorScheme
+    val colors = if (darkTheme) DarkColorScheme else LightColorScheme
+
     MaterialTheme(
         colorScheme = colors,
         shapes = shapes,

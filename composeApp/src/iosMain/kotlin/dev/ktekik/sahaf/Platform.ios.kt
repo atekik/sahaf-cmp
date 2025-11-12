@@ -1,5 +1,6 @@
 package dev.ktekik.sahaf
 
+import androidx.compose.runtime.Composable
 import platform.UIKit.UIDevice
 
 class IOSPlatform: Platform {
@@ -7,3 +8,13 @@ class IOSPlatform: Platform {
 }
 
 actual fun getPlatform(): Platform = IOSPlatform()
+
+@Composable
+actual fun HideStatusBarComposable() {
+
+}
+
+@Composable
+actual fun ShowStatusBarComposable() {
+    TODO("Not yet implemented")
+}

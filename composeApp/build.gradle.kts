@@ -50,6 +50,7 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.compose.navigation)
             implementation(project(":utils"))
             implementation(project(":signin"))
             implementation(project.dependencies.platform(libs.koin.bom))

@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import dev.ktekik.sahaf.fts.WelcomeScreen
 import dev.ktekik.sahaf.fts.GetStartedScreen
+import dev.ktekik.sahaf.fts.WelcomeScreen
 import org.koin.compose.koinInject
 
 @Composable
