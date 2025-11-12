@@ -5,7 +5,7 @@ import dev.ktekik.utils.Resources
 import org.jetbrains.compose.resources.DrawableResource
 import sahaf.composeapp.generated.resources.Res
 import sahaf.composeapp.generated.resources.ic_google
-import sahaf.composeapp.generated.resources.logo_alt
+import sahaf.composeapp.generated.resources.logo
 import sahaf.composeapp.generated.resources.sahafBackground
 
 class ResourcesImpl: Resources {
@@ -22,5 +22,5 @@ private class DrawablesImpl: Drawables {
         get() = Res.drawable.sahafBackground
 
     override val logo: DrawableResource
-        get() = Res.drawable.logo_alt
+        get() = Res.drawable.logo
 }

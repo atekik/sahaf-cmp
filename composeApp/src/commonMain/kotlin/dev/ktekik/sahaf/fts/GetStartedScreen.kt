@@ -1,4 +1,4 @@
-package dev.ktekik.sahaf
+package dev.ktekik.sahaf.fts
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -13,22 +13,39 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import dev.ktekik.sahaf.cloud.Reader
-import dev.ktekik.sahaf.navigation.NavigationViewModel
+import androidx.navigation.NavController
+import dev.ktekik.sahaf.navigation.NavigationSideEffect
+import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
 import dev.ktekik.sahaf.utils.ResourcesImpl
-import dev.ktekik.signin.models.Profile
 import dev.ktekik.utils.LocalResources
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
-fun WelcomeScreen(viewModel: NavigationViewModel) {
+fun GetStartedScreen(viewModel: FtsNavigationViewModel, navController: NavController) {
+    val navState = viewModel.container.stateFlow.collectAsState()
+
+    LaunchedEffect(navState) {
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
+                is NavigationSideEffect.NavigateTo -> {
+                    navController.navigate(sideEffect.destination.route)
+                }
+            }
+        }
+    }
+
+    GetStartedButton(viewModel)
+}
+
+@Composable
+fun GetStartedButton(viewModel: FtsNavigationViewModel) {
     CompositionLocalProvider(LocalResources provides ResourcesImpl()) {
         Box(
             modifier = Modifier
@@ -63,7 +80,8 @@ fun WelcomeScreen(viewModel: NavigationViewModel) {
                 shape = MaterialTheme.shapes.extraLarge,
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
             ) {
-                Text(text = "Get Started",
+                Text(
+                    text = "Get Started",
                     color = LocalContentColor.current,
                     style = MaterialTheme.typography.titleLarge,
                 )
@@ -72,42 +90,19 @@ fun WelcomeScreen(viewModel: NavigationViewModel) {
     }
 }
 
-@Composable
-@Preview
-fun App() {
-    // Preview version without ViewModel
-    CompositionLocalProvider(LocalResources provides ResourcesImpl()) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .paint(
-                    painter = painterResource(LocalResources.current.drawables.background),
-                    contentScale = ContentScale.Crop,
-                    alpha = .8f
-                )
-        ) {
-            Image(
-                painter = painterResource(LocalResources.current.drawables.logo),
-                contentDescription = "App Logo",
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalUuidApi::class)
-fun Profile.toReader(): Reader {
-    return Reader(
-        name = this.name,
-        emailRelay = this.email,
-        pictureURL = this.picture,
-        activeListings = emptySet(),
-        zipcode = "",
-        avgRating = 0.0,
-        followers = emptySet(),
-        following = emptySet(),
-        geofenceFiftyKms = emptySet(),
-        devices = emptySet(), // Fetch device id
-        readerId = null
-    )
-}
+//@OptIn(ExperimentalUuidApi::class)
+//fun Profile.toReader(): Reader {
+//    return Reader(
+//        name = this.name,
+//        emailRelay = this.email,
+//        pictureURL = this.picture,
+//        activeListings = emptySet(),
+//        zipcode = "",
+//        avgRating = 0.0,
+//        followers = emptySet(),
+//        following = emptySet(),
+//        geofenceFiftyKms = emptySet(),
+//        devices = emptySet(), // Fetch device id
+//        readerId = null
+//    )
+//}
