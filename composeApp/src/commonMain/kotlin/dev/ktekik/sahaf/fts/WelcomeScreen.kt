@@ -11,6 +11,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,7 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import dev.ktekik.sahaf.ShowStatusBarComposable
+import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
+import dev.ktekik.sahaf.navigation.NavigationSideEffect
 import dev.ktekik.sahaf.utils.ResourcesImpl
 import dev.ktekik.signin.AuthResponse
 import dev.ktekik.signin.GoogleButton
@@ -28,7 +33,25 @@ import dev.ktekik.utils.LocalResources
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun WelcomeScreen() {
+fun WelcomeScreen(viewModel: FtsNavigationViewModel, navController: NavController) {
+    val navState = viewModel.container.stateFlow.collectAsState()
+
+    LaunchedEffect(navState) {
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
+                is NavigationSideEffect.NavigateTo -> {
+                    navController.navigate(
+                        route = sideEffect.destination.route,
+                    ) {
+                        popUpTo(navController.graph.id) {
+                            inclusive = true
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     ShowStatusBarComposable()
 
     Column(
@@ -90,9 +113,8 @@ fun WelcomeScreen() {
             GoogleButton(
                 modifier = Modifier.padding(bottom = 64.dp),
                 onResponse = {
-                    (it as? AuthResponse.Success)?.account?.profile?.name?.let { name ->
-                        userName = name
-                        snackbarMessage = ""
+                    (it as? AuthResponse.Success)?.account?.profile?.let { profile ->
+                        viewModel.navigateToZipcodeEntry(profile)
                     }
 
                     (it as? AuthResponse.Error)?.message?.let { message ->

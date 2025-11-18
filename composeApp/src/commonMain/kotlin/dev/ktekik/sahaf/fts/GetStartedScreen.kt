@@ -39,8 +39,6 @@ import org.jetbrains.compose.resources.painterResource
 fun GetStartedScreen(viewModel: FtsNavigationViewModel, navController: NavController) {
     val navState = viewModel.container.stateFlow.collectAsState()
 
-    HideStatusBarComposable()
-
     LaunchedEffect(navState) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
@@ -50,6 +48,8 @@ fun GetStartedScreen(viewModel: FtsNavigationViewModel, navController: NavContro
             }
         }
     }
+
+    HideStatusBarComposable()
 
     CompositionLocalProvider(LocalResources provides ResourcesImpl()) {
         Box(
@@ -113,20 +113,3 @@ fun LogoWithShadow(modifier: Modifier) {
         )
     )
 }
-
-//@OptIn(ExperimentalUuidApi::class)
-//fun Profile.toReader(): Reader {
-//    return Reader(
-//        name = this.name,
-//        emailRelay = this.email,
-//        pictureURL = this.picture,
-//        activeListings = emptySet(),
-//        zipcode = "",
-//        avgRating = 0.0,
-//        followers = emptySet(),
-//        following = emptySet(),
-//        geofenceFiftyKms = emptySet(),
-//        devices = emptySet(), // Fetch device id
-//        readerId = null
-//    )
-//}
