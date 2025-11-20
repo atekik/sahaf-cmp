@@ -5,6 +5,7 @@ sealed class NavigationDestination(val route: String) {
     data object Welcome : NavigationDestination("fts_greet")
     data object ZipcodeEntry : NavigationDestination("zipcode_entry")
     data object RegistrationPendingDialog : NavigationDestination("registration_pending")
+    data object RegistrationFailedDialog : NavigationDestination("registration_failed")
     data object Home : NavigationDestination("home")
 }
 

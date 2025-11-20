@@ -1,7 +1,6 @@
 package dev.ktekik.sahaf
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 
 interface Platform {
     val name: String

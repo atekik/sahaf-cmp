@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.firebase.FirebaseApp
-import dev.ktekik.sahaf.navigation.NavHost
+import dev.ktekik.sahaf.navigation.FtsNavHost
 import dev.ktekik.sahaf.theming.SahafTheme
 
 class MainActivity : ComponentActivity() {
@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NavHost()
+                    FtsNavHost()
                 }
             }
         }

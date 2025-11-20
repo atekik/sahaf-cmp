@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,30 +29,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
-import dev.ktekik.sahaf.navigation.NavigationSideEffect
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 
 @Preview
 @Composable
-fun USZipcodeEntryScreen(viewModel: FtsNavigationViewModel, navController: NavController) {
+fun USZipcodeEntryScreen() {
+    val viewModel: FtsNavigationViewModel = koinInject()
+
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     var zipcode by remember { mutableStateOf("") }
     var isContinueButtonVisible by remember { mutableStateOf(false) }
     val maxLength = 5
 
-    LaunchedEffect(Unit) {
-        viewModel.container.sideEffectFlow.collect { sideEffect ->
-            when (sideEffect) {
-                is NavigationSideEffect.NavigateTo -> {
-                    navController.navigate(
-                        route = sideEffect.destination.route,
-                    )
-                }
-            }
-        }
-    }
     Column(
         modifier = Modifier
             .fillMaxSize()
