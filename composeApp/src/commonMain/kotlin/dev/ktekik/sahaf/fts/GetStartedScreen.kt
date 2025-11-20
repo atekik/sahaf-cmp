@@ -15,8 +15,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
@@ -26,28 +24,16 @@ import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import dev.ktekik.sahaf.HideStatusBarComposable
 import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
-import dev.ktekik.sahaf.navigation.NavigationSideEffect
 import dev.ktekik.sahaf.theming.md_theme_light_shadow
 import dev.ktekik.sahaf.utils.ResourcesImpl
 import dev.ktekik.utils.LocalResources
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 
 @Composable
-fun GetStartedScreen(viewModel: FtsNavigationViewModel, navController: NavController) {
-    val navState = viewModel.container.stateFlow.collectAsState()
-
-    LaunchedEffect(navState) {
-        viewModel.container.sideEffectFlow.collect { sideEffect ->
-            when (sideEffect) {
-                is NavigationSideEffect.NavigateTo -> {
-                    navController.navigate(sideEffect.destination.route)
-                }
-            }
-        }
-    }
+fun GetStartedScreen() {
 
     HideStatusBarComposable()
 
@@ -65,13 +51,15 @@ fun GetStartedScreen(viewModel: FtsNavigationViewModel, navController: NavContro
 
             LogoWithShadow(modifier = Modifier.align(Alignment.Center))
 
-            GetStartedButton(Modifier.align(Alignment.BottomCenter), viewModel)
+            GetStartedButton(Modifier.align(Alignment.BottomCenter))
         }
     }
 }
 
 @Composable
-fun GetStartedButton(modifier: Modifier, viewModel: FtsNavigationViewModel) {
+fun GetStartedButton(modifier: Modifier) {
+    val viewModel: FtsNavigationViewModel = koinInject()
+
     Button(
         modifier = modifier.padding(
             horizontal = 32.dp,

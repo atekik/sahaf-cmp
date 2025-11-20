@@ -32,7 +32,7 @@ internal actual fun GoogleLoginButton(
     } ?: state.value.signInError?.let {
         onResponse(AuthResponse.Error(it))
     } ?: state.value.isCancelled.let {
-        onResponse(AuthResponse.Cancelled)
+        if (it) onResponse(AuthResponse.Cancelled)
     }
 
     GoogleButtonUI(

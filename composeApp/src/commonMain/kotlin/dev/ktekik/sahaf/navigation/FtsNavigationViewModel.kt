@@ -1,12 +1,10 @@
 package dev.ktekik.sahaf.navigation
 
 import androidx.lifecycle.ViewModel
-import dev.ktekik.sahaf.cloud.Reader
 import dev.ktekik.signin.models.Profile
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
-import kotlin.uuid.ExperimentalUuidApi
 
 data class NavigationState(
     val currentDestination: NavigationDestination = NavigationDestination.GetStarted,
@@ -14,12 +12,16 @@ data class NavigationState(
 )
 
 sealed interface NavigationSideEffect {
-    data class NavigateTo(val destination: NavigationDestination, val profile: Profile? = null) : NavigationSideEffect
+    data class NavigateTo(
+        val destination: NavigationDestination,
+        val popUpTo: Boolean = false,
+        val popUpToInclusive: Boolean = false,
+    ) : NavigationSideEffect
 }
 
 class FtsNavigationViewModel : ViewModel(), ContainerHost<NavigationState, NavigationSideEffect> {
     override val container: Container<NavigationState, NavigationSideEffect> =
-        container<NavigationState, NavigationSideEffect>(NavigationState())
+        container(NavigationState())
 
     fun navigateToGreeting() {
         intent {
@@ -30,15 +32,37 @@ class FtsNavigationViewModel : ViewModel(), ContainerHost<NavigationState, Navig
 
     fun navigateToZipcodeEntry(profile: Profile) {
         intent {
-            reduce { state.copy(currentDestination = NavigationDestination.ZipcodeEntry, profile = profile) }
-            postSideEffect(NavigationSideEffect.NavigateTo(NavigationDestination.ZipcodeEntry, profile))
+            reduce {
+                state.copy(
+                    currentDestination = NavigationDestination.ZipcodeEntry,
+                    profile = profile
+                )
+            }
+            postSideEffect(
+                NavigationSideEffect.NavigateTo(
+                    destination = NavigationDestination.ZipcodeEntry,
+                    popUpTo = true,
+                    popUpToInclusive = true
+                )
+            )
         }
     }
 
     fun registerProfile(profile: Profile) {
         intent {
-            reduce { state.copy(currentDestination = NavigationDestination.RegistrationPendingDialog, profile = profile) }
-            postSideEffect(NavigationSideEffect.NavigateTo(NavigationDestination.RegistrationPendingDialog, profile))
+            reduce {
+                state.copy(
+                    currentDestination = NavigationDestination.RegistrationPendingDialog,
+                    profile = profile
+                )
+            }
+            postSideEffect(
+                NavigationSideEffect.NavigateTo(
+                    NavigationDestination.RegistrationPendingDialog,
+                    popUpTo = true,
+                    popUpToInclusive = true
+                )
+            )
         }
     }
 }

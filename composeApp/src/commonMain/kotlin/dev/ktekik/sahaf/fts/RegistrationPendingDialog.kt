@@ -26,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -35,10 +34,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
-import dev.ktekik.sahaf.reader.ReaderRegistrySideEffect
+import dev.ktekik.sahaf.navigation.NavigationDestination
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
 import dev.ktekik.sahaf.reader.toReader
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import sahaf.composeapp.generated.resources.Res
@@ -49,24 +52,12 @@ import sahaf.composeapp.generated.resources.reader_registering_icon
 
 @Composable
 fun RegistrationPendingDialog(
-    viewModel: FtsNavigationViewModel,
+    navController: NavController,
     onDismissRequest: () -> Unit = {},
 ) {
+    val viewModel: FtsNavigationViewModel = koinInject()
     val readerRegistryViewModel: ReaderRegistryViewModel = koinInject()
     val navState by viewModel.container.stateFlow.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        navState.profile?.let {
-            readerRegistryViewModel.registerReader(it.toReader())
-        } ?: throw IllegalStateException("Profile is null, not expected")
-
-        readerRegistryViewModel.container.sideEffectFlow.collect {
-            when(it) {
-                ReaderRegistrySideEffect.Error -> TODO()
-                ReaderRegistrySideEffect.Success -> TODO()
-            }
-        }
-    }
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -79,7 +70,7 @@ fun RegistrationPendingDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(24.dp))
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.primaryContainer)
                 .padding(32.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -136,6 +127,31 @@ fun RegistrationPendingDialog(
 
                 VectorCircularProgressIndicator()
             }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+
+        launch(Dispatchers.IO) {
+            navState.profile?.let {
+                readerRegistryViewModel.registerReader(it.toReader(), {
+                    navController.navigate(
+                        route = NavigationDestination.Home.route
+                    ) {
+                        popUpTo(NavigationDestination.Home.route) {
+                            inclusive = true
+                        }
+                    }
+                }) {
+                    navController.navigate(
+                        route = NavigationDestination.RegistrationFailedDialog.route
+                    ) {
+                        popUpTo(NavigationDestination.RegistrationPendingDialog.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            } ?: throw IllegalStateException("Profile is null, not expected")
         }
     }
 }
