@@ -1,0 +1,16 @@
+*.iml
+.gradle
+.idea
+.DS_Store
+build
+captures
+.externalNativeBuild
+.cxx
+local.properties
+xcuserdata
+./androidApp/build
+./composeApp/build
+./androidApp/google-services.json
+./iosApp/iosApp/GoogleService-Info.plist
+.kotlin
+iosApp/Pods/
