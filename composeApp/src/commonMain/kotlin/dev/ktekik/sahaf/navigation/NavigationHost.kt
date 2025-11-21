@@ -61,7 +61,7 @@ fun FtsNavHost() {
         composable(
             route = NavigationDestination.RegistrationPendingDialog.route,
         ) {
-            RegistrationPendingDialog(navController)
+            RegistrationPendingDialog(navController, readerRegistryViewModel)
         }
 
         composable(
@@ -89,7 +89,7 @@ fun RouteObserver(navController: NavController) {
                     navController.navigate(
                         route = sideEffect.destination.route,
                     ) {
-                        popUpTo(sideEffect.destination.route) {
+                        popUpTo(navController.graph.id) {
                             inclusive = true
                         }
                     }

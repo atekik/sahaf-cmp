@@ -65,4 +65,28 @@ class FtsNavigationViewModel : ViewModel(), ContainerHost<NavigationState, Navig
             )
         }
     }
+
+    fun navigateHome() {
+        intent {
+            postSideEffect(
+                NavigationSideEffect.NavigateTo(
+                    NavigationDestination.Home,
+                    popUpTo = true,
+                    popUpToInclusive = true
+                )
+            )
+        }
+    }
+
+    fun navigateToRegistrationFailed() {
+        intent {
+            postSideEffect(
+                NavigationSideEffect.NavigateTo(
+                    NavigationDestination.RegistrationFailedDialog,
+                    popUpTo = true,
+                    popUpToInclusive = true
+                )
+            )
+        }
+    }
 }

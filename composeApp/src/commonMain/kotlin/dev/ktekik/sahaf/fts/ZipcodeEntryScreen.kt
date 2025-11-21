@@ -23,7 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -176,7 +175,7 @@ fun NumericKeypad(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-            .background(MaterialTheme.colorScheme.primary)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(16.dp)
     ) {
         // Top handle line
@@ -230,7 +229,7 @@ fun NumericKeypad(
                             text = "✓",
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onPrimary,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = 28.sp
                         )
                     }
@@ -259,7 +258,7 @@ fun NumericKeypad(
                         text = "⌫",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 28.sp
                     )
                 }
@@ -276,7 +275,6 @@ fun KeypadButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val keypadTextColor = Color.White
 
     Box(
         modifier = modifier
@@ -290,32 +288,8 @@ fun KeypadButton(
             text = text,
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
-            color = keypadTextColor,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 28.sp
         )
     }
 }
-
-//@Composable
-//fun BackArrowIcon(
-//    onClick: () -> Unit,
-//    tint: Color,
-//    modifier: Modifier = Modifier
-//) {
-//    androidx.compose.foundation.Canvas(
-//        modifier = modifier
-//            .clickable(onClick = onClick)
-//    ) {
-//        val path = Path().apply {
-//            moveTo(size.width * 0.7f, size.height * 0.2f)
-//            lineTo(size.width * 0.3f, size.height * 0.5f)
-//            lineTo(size.width * 0.7f, size.height * 0.8f)
-//        }
-//        drawPath(
-//            path = path,
-//            color = tint,
-//            style = Stroke(width = 3.dp.toPx(), cap = androidx.compose.ui.graphics.StrokeCap.Round)
-//        )
-//    }
-//}
-
