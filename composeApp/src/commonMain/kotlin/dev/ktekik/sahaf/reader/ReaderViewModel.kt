@@ -21,10 +21,12 @@ data class ReaderRegistryState(
 class ReaderRegistryViewModel(private val postReaderUseCase: PostReaderUseCase): ContainerHost<ReaderRegistryState, Unit>, ViewModel() {
     override val container: Container<ReaderRegistryState, Unit> = container(ReaderRegistryState())
 
-     fun registerReader(reader: Reader, onSuccess: (reader: Reader) -> Unit, onError: () -> Unit) {
+     fun registerReader(profile: Profile?, onSuccess: (reader: Reader) -> Unit, onError: () -> Unit = {}) {
          intent {
              reduce { state.copy(isLoading = true) }
+             val reader = profile?.toReader() ?: throw IllegalStateException("Profile is null")
              postReaderUseCase.execute(reader).collect {
+                 // ToDo remove this delay
                  delay(2000)
                  reduce { state.copy(isLoading = false, reader = it.reader, error = it.error) }
 

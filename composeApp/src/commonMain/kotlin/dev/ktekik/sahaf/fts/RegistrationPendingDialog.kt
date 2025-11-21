@@ -53,10 +53,10 @@ import sahaf.composeapp.generated.resources.reader_registering_icon
 @Composable
 fun RegistrationPendingDialog(
     navController: NavController,
+    readerRegistryViewModel: ReaderRegistryViewModel,
     onDismissRequest: () -> Unit = {},
 ) {
     val viewModel: FtsNavigationViewModel = koinInject()
-    val readerRegistryViewModel: ReaderRegistryViewModel = koinInject()
     val navState by viewModel.container.stateFlow.collectAsStateWithLifecycle()
 
     Dialog(
@@ -134,22 +134,10 @@ fun RegistrationPendingDialog(
 
         launch(Dispatchers.IO) {
             navState.profile?.let {
-                readerRegistryViewModel.registerReader(it.toReader(), {
-                    navController.navigate(
-                        route = NavigationDestination.Home.route
-                    ) {
-                        popUpTo(NavigationDestination.Home.route) {
-                            inclusive = true
-                        }
-                    }
+                readerRegistryViewModel.registerReader(it, {
+                    viewModel.navigateHome()
                 }) {
-                    navController.navigate(
-                        route = NavigationDestination.RegistrationFailedDialog.route
-                    ) {
-                        popUpTo(NavigationDestination.RegistrationPendingDialog.route) {
-                            inclusive = true
-                        }
-                    }
+                    viewModel.navigateToRegistrationFailed()
                 }
             } ?: throw IllegalStateException("Profile is null, not expected")
         }

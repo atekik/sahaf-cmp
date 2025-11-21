@@ -16,7 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,9 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
-import dev.ktekik.sahaf.reader.toReader
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import sahaf.composeapp.generated.resources.Res
@@ -34,14 +33,13 @@ import sahaf.composeapp.generated.resources.error_icon
 
 @Composable
 fun RegistrationFailedDialog(
-    onDismissRequest: () -> Unit = {},
     readerRegistryViewModel: ReaderRegistryViewModel,
 ) {
     val viewModel: FtsNavigationViewModel = koinInject()
-    val navState by viewModel.container.stateFlow.collectAsState()
-    val registrationState by readerRegistryViewModel.container.stateFlow.collectAsState()
+    val navState by viewModel.container.stateFlow.collectAsStateWithLifecycle()
+    val registrationState by readerRegistryViewModel.container.stateFlow.collectAsStateWithLifecycle()
 
-    Dialog(onDismissRequest = onDismissRequest) {
+    Dialog(onDismissRequest = { }) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -76,13 +74,9 @@ fun RegistrationFailedDialog(
             Spacer(modifier = Modifier.height(24.dp))
             Button(
                 onClick = {
-                    navState.profile?.let {
-                        readerRegistryViewModel.registerReader(it.toReader(), {
-                            // navigate home
-                        }) { 
-                            // no-op
-                        }
-                    } ?: IllegalStateException("Profile is null")
+                    readerRegistryViewModel.registerReader(navState.profile, {
+                        viewModel.navigateHome()
+                    })
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
