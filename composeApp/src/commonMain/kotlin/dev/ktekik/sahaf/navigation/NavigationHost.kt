@@ -1,5 +1,6 @@
 package dev.ktekik.sahaf.navigation
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -104,9 +105,8 @@ private fun HomeScreenPlaceHolder() {
     val viewModel: FtsNavigationViewModel = koinInject()
     val state: NavigationState = viewModel.container.stateFlow.value
 
-    Surface(
+    Column(
         modifier = Modifier.fillMaxSize().padding(32.dp),
-        color = MaterialTheme.colorScheme.background
     ) {
         Text(
             "Name: ${state.profile?.name}",

@@ -7,30 +7,25 @@ import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
 import dev.ktekik.signin.di.initSignInModule
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
 import org.koin.core.context.GlobalContext
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
+import kotlin.uuid.ExperimentalUuidApi
 
 expect fun platformModule(): org.koin.core.module.Module
 
-@OptIn(ExperimentalSerializationApi::class)
+@OptIn(ExperimentalSerializationApi::class, ExperimentalUuidApi::class)
 val commonModule = module {
     // Add other shared dependencies here (ViewModels, UseCases, etc.)
 
-    factory<HttpClient> {
-        HttpClient(engine = get<HttpClientEngine>()) {
+    single<HttpClient> {
+        HttpClient(CIO) {
             install(ContentNegotiation) {
-                json(
-                    Json {
-                        ignoreUnknownKeys = true
-                        explicitNulls = false
-                    }
-                )
+                json()
             }
         }
     }
@@ -42,7 +37,7 @@ val commonModule = module {
     factory { PostReaderUseCase(readerApi = get()) }
 
     factory { ReaderRegistryViewModel(postReaderUseCase = get()) }
-    
+
     // NavigationViewModel - singleton to maintain navigation state
     single { FtsNavigationViewModel() }
 }

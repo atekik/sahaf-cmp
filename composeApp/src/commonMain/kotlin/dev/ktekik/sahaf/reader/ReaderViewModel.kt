@@ -5,6 +5,7 @@ import dev.ktekik.sahaf.cloud.PostReaderUseCase
 import dev.ktekik.sahaf.cloud.Reader
 import dev.ktekik.signin.models.Profile
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.orbitmvi.orbit.Container
@@ -25,17 +26,19 @@ class ReaderRegistryViewModel(private val postReaderUseCase: PostReaderUseCase):
          intent {
              reduce { state.copy(isLoading = true) }
              val reader = profile?.toReader() ?: throw IllegalStateException("Profile is null")
-             postReaderUseCase.execute(reader).collect {
-                 // ToDo remove this delay
-                 delay(2000)
-                 reduce { state.copy(isLoading = false, reader = it.reader, error = it.error) }
+             withContext(Dispatchers.IO) {
+                 postReaderUseCase.execute(reader).collect {
+                     // ToDo remove this delay
+                     delay(2000)
+                     reduce { state.copy(isLoading = false, reader = it.reader, error = it.error) }
 
-                 withContext(Dispatchers.Main) {
-                     it.reader?.let { reader ->
-                         onSuccess.invoke(reader)
-                     }
-                     it.error?.let {
-                         onError.invoke()
+                     withContext(Dispatchers.Main) {
+                         it.reader?.let { reader ->
+                             onSuccess.invoke(reader)
+                         }
+                         it.error?.let {
+                             onError.invoke()
+                         }
                      }
                  }
              }
@@ -50,7 +53,7 @@ fun Profile.toReader(): Reader {
         emailRelay = this.email,
         pictureURL = this.picture,
         activeListings = emptySet(),
-        zipcode = "",
+        zipcode = this.zipcode ?: "",
         avgRating = 0.0,
         followers = emptySet(),
         following = emptySet(),
