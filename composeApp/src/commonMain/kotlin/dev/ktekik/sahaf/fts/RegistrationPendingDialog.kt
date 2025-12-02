@@ -34,11 +34,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
-import dev.ktekik.sahaf.navigation.NavigationDestination
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
-import dev.ktekik.sahaf.reader.toReader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -52,7 +49,6 @@ import sahaf.composeapp.generated.resources.reader_registering_icon
 
 @Composable
 fun RegistrationPendingDialog(
-    navController: NavController,
     readerRegistryViewModel: ReaderRegistryViewModel,
     onDismissRequest: () -> Unit = {},
 ) {

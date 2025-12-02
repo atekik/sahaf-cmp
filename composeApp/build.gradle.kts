@@ -41,7 +41,6 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
-            implementation(libs.ktor.client.okhttp)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.contentnegotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
@@ -67,9 +66,10 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.cio)
 
+            implementation(libs.data.store.core)
+            implementation(libs.data.store.preferences)
         }
         iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

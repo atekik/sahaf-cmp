@@ -19,7 +19,7 @@ sealed interface NavigationSideEffect {
     ) : NavigationSideEffect
 }
 
-class FtsNavigationViewModel : ViewModel(), ContainerHost<NavigationState, NavigationSideEffect> {
+class FtsNavigationViewModel() : ViewModel(), ContainerHost<NavigationState, NavigationSideEffect> {
     override val container: Container<NavigationState, NavigationSideEffect> =
         container(NavigationState())
 
