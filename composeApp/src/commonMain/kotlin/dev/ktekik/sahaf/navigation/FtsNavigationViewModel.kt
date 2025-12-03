@@ -1,7 +1,10 @@
 package dev.ktekik.sahaf.navigation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dev.ktekik.sahaf.usecases.FetchReaderIdUseCase
 import dev.ktekik.signin.models.Profile
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -19,9 +22,28 @@ sealed interface NavigationSideEffect {
     ) : NavigationSideEffect
 }
 
-class FtsNavigationViewModel() : ViewModel(), ContainerHost<NavigationState, NavigationSideEffect> {
+class FtsNavigationViewModel(fetchReaderIdUseCase: FetchReaderIdUseCase) : ViewModel(),
+    ContainerHost<NavigationState, NavigationSideEffect> {
     override val container: Container<NavigationState, NavigationSideEffect> =
         container(NavigationState())
+
+    init {
+        viewModelScope.launch {
+            fetchReaderIdUseCase.execute(Unit).collect {
+                if (it == null) {
+                    navigateToGetStarted()
+                } else {
+                    navigateHome()
+                }
+            }
+        }
+    }
+
+    fun navigateToGetStarted() {
+        intent {
+            postSideEffect(NavigationSideEffect.NavigateTo(NavigationDestination.GetStarted))
+        }
+    }
 
     fun navigateToGreeting() {
         intent {

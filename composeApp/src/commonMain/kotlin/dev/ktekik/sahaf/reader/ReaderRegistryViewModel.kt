@@ -1,10 +1,10 @@
 package dev.ktekik.sahaf.reader
 
 import androidx.lifecycle.ViewModel
-import dev.ktekik.sahaf.datastore.ReaderIdRepository
 import dev.ktekik.sahaf.models.Reader
 import dev.ktekik.sahaf.models.toReader
-import dev.ktekik.sahaf.usecases.UseCase
+import dev.ktekik.sahaf.usecases.PostReaderUseCase
+import dev.ktekik.sahaf.usecases.SaveReaderIdUseCase
 import dev.ktekik.signin.models.Profile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -22,8 +22,8 @@ data class ReaderRegistryState(
 )
 
 class ReaderRegistryViewModel(
-    private val postReaderUseCase: UseCase<Reader, ReaderRegistryState>,
-    private val readerIdRepository: ReaderIdRepository
+    private val postReaderUseCase: PostReaderUseCase,
+    private val saveReaderIdUseCase: SaveReaderIdUseCase
 ) : ContainerHost<ReaderRegistryState, Unit>, ViewModel() {
     override val container: Container<ReaderRegistryState, Unit> = container(ReaderRegistryState())
 
@@ -46,9 +46,8 @@ class ReaderRegistryViewModel(
                         it.reader?.let { reader ->
                             onSuccess.invoke(reader)
 
-                            // ToDo make this a use case.
                             reader.readerId?.let { readerId ->
-                                readerIdRepository.saveId(readerId.toString())
+                                saveReaderIdUseCase.execute(readerId.toString())
                             }
                         }
                         it.error?.let {

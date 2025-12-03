@@ -3,6 +3,7 @@
 
     <application
         android:name=".SahafApplication"
+        android:label="@string/app_name"
         android:allowBackup="false"
         android:icon="@drawable/logo"
         android:supportsRtl="true"

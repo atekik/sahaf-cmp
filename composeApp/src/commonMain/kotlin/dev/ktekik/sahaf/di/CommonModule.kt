@@ -3,9 +3,13 @@ package dev.ktekik.sahaf.di
 import dev.ktekik.sahaf.cloud.ReaderApi
 import dev.ktekik.sahaf.cloud.readerApiBuilder
 import dev.ktekik.sahaf.datastore.ReaderIdRepository
+import dev.ktekik.sahaf.home.HomeViewModel
 import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
+import dev.ktekik.sahaf.usecases.FetchReaderIdUseCase
 import dev.ktekik.sahaf.usecases.PostReaderUseCase
+import dev.ktekik.sahaf.usecases.QueryReaderUseCase
+import dev.ktekik.sahaf.usecases.SaveReaderIdUseCase
 import dev.ktekik.signin.di.initSignInModule
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -23,7 +27,7 @@ expect fun platformModule(): org.koin.core.module.Module
 @OptIn(ExperimentalSerializationApi::class, ExperimentalUuidApi::class)
 val commonModule = module {
     single<HttpClient> {
-        HttpClient(CIO.create { }) {
+        HttpClient(CIO) {
             install(ContentNegotiation) {
                 json() // Use the Koin-managed Json instance
             }
@@ -36,11 +40,19 @@ val commonModule = module {
 
     factory { PostReaderUseCase(readerApi = get()) }
 
+    factory { QueryReaderUseCase(readerApi = get()) }
+
     single { ReaderIdRepository(get()) }
 
-    single { FtsNavigationViewModel() }
+    factory { FetchReaderIdUseCase(get()) }
 
-    factory { ReaderRegistryViewModel(postReaderUseCase = get(), readerIdRepository = get()) }
+    factory { SaveReaderIdUseCase(readerIdRepository = get()) }
+
+    single { FtsNavigationViewModel(get()) }
+
+    single { HomeViewModel(get(), get()) }
+
+    factory { ReaderRegistryViewModel(postReaderUseCase = get(), saveReaderIdUseCase = get()) }
 }
 
 fun initKoin(config: KoinAppDeclaration = {}) {
