@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import dev.ktekik.sahaf.fts.GetStartedScreen
 import dev.ktekik.sahaf.fts.RegistrationFailedDialog
 import dev.ktekik.sahaf.fts.RegistrationPendingDialog
@@ -61,11 +62,17 @@ fun FtsNavHost() {
             RegistrationFailedDialog(readerRegistryViewModel = readerRegistryViewModel)
         }
 
-        composable(
-            route = NavigationDestination.Home.route
+        navigation(
+            route = NavigationDestination.Home.route,
+            startDestination = NavigationDestination.HomeNav.HomeLoading.homeRoute
         ) {
-            HomeScreen()
+            composable(
+                route = NavigationDestination.HomeNav.HomeLoading.homeRoute
+            ) {
+                HomeScreen()
+            }
         }
+
     }
 }
 

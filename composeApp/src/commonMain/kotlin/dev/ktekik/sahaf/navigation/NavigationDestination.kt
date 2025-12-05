@@ -6,6 +6,10 @@ sealed class NavigationDestination(val route: String) {
     data object ZipcodeEntry : NavigationDestination("zipcode_entry")
     data object RegistrationPendingDialog : NavigationDestination("registration_pending")
     data object RegistrationFailedDialog : NavigationDestination("registration_failed")
+
     data object Home : NavigationDestination("home")
+    sealed class HomeNav(val homeRoute: String) : NavigationDestination("home") {
+        data object HomeLoading : HomeNav("home_loading")
+    }
 }
 
