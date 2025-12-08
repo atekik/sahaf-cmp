@@ -8,8 +8,8 @@ sealed class NavigationDestination(val route: String) {
     data object RegistrationFailedDialog : NavigationDestination("registration_failed")
 
     data object Home : NavigationDestination("home")
-    sealed class HomeNav(val homeRoute: String) : NavigationDestination("home") {
-        data object HomeLoading : HomeNav("home_loading")
+    sealed class PostFTS(val homeRoute: String) : NavigationDestination("post_fts") {
+        data object HomeLanding : PostFTS("home_landing")
     }
 }
 

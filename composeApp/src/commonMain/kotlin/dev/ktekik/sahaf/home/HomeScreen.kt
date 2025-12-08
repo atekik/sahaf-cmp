@@ -19,55 +19,63 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.koinInject
 
 @Composable
-fun HomeScreen() {
-    val viewModel: HomeViewModel = koinInject()
-    val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
+fun HomeScreen(homeViewModel: HomeViewModel = koinInject()) {
+    val state: HomeScreenState by homeViewModel.container.stateFlow.collectAsStateWithLifecycle()
 
-    when (val currentState = state) {
-        is HomeScreenState.LoadingState -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        }
+    when(val currentState = state) {
+        is HomeScreenState.LoadingState -> HomeLoadingScreen()
+        is HomeScreenState.ErrorState -> HomeErrorScreen(currentState)
+        is HomeScreenState.ReadyState -> HomeReadyScreen(currentState)
+    }
+}
 
-        is HomeScreenState.ErrorState -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(
-                    text = "Error: ${currentState.error}",
-                    style = MaterialTheme.typography.headlineLarge,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
+@Composable
+private fun HomeLoadingScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
+    }
+}
 
-        is HomeScreenState.ReadyState -> {
-            Column(
-                modifier = Modifier.fillMaxSize().padding(32.dp),
-            ) {
-                Text(
-                    "Name: ${currentState.reader.name}",
-                    style = MaterialTheme.typography.headlineLarge,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    "Email: ${currentState.reader.emailRelay}",
-                    style = MaterialTheme.typography.headlineLarge,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    "Picture: ${currentState.reader.pictureURL}",
-                    style = MaterialTheme.typography.headlineLarge,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    "Zipcode: ${currentState.reader.zipcode}",
-                    style = MaterialTheme.typography.headlineLarge,
-                    textAlign = TextAlign.Center
-                )
-            }
+@Composable
+private fun HomeErrorScreen(currentState: HomeScreenState.ErrorState) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(
+            text = "Error: ${currentState.error}",
+            style = MaterialTheme.typography.headlineLarge,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+private fun HomeReadyScreen(currentState: HomeScreenState.ReadyState) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(32.dp),
+        ) {
+            Text(
+                "Name: ${currentState.reader.name}",
+                style = MaterialTheme.typography.headlineLarge,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                "Email: ${currentState.reader.emailRelay}",
+                style = MaterialTheme.typography.headlineLarge,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                "Picture: ${currentState.reader.pictureURL}",
+                style = MaterialTheme.typography.headlineLarge,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                "Zipcode: ${currentState.reader.zipcode}",
+                style = MaterialTheme.typography.headlineLarge,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

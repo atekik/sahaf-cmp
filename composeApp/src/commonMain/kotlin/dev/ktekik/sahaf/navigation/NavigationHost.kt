@@ -31,7 +31,7 @@ fun FtsNavHost() {
     val readerRegistryViewModel: ReaderRegistryViewModel = koinInject()
     val navState = viewModel.container.stateFlow.value
     // Todo also check if user info saved to database. If so, start with home screen. If not,
-    val startDestination = navState.currentDestination
+    val startDestination = navState.destination
 
     RouteObserver(navController)
 
@@ -64,10 +64,10 @@ fun FtsNavHost() {
 
         navigation(
             route = NavigationDestination.Home.route,
-            startDestination = NavigationDestination.HomeNav.HomeLoading.homeRoute
+            startDestination = NavigationDestination.PostFTS.HomeLanding.homeRoute
         ) {
             composable(
-                route = NavigationDestination.HomeNav.HomeLoading.homeRoute
+                route = NavigationDestination.PostFTS.HomeLanding.homeRoute
             ) {
                 HomeScreen()
             }
