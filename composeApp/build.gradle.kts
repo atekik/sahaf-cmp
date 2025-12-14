@@ -68,6 +68,8 @@ kotlin {
 
             implementation(libs.data.store.core)
             implementation(libs.data.store.preferences)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.bundles.coil)
         }
         iosMain.dependencies {
         }

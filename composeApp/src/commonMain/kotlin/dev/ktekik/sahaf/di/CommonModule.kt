@@ -1,11 +1,14 @@
 package dev.ktekik.sahaf.di
 
+import dev.ktekik.sahaf.cloud.BookApi
 import dev.ktekik.sahaf.cloud.ReaderApi
+import dev.ktekik.sahaf.cloud.bookApiBuilder
 import dev.ktekik.sahaf.cloud.readerApiBuilder
 import dev.ktekik.sahaf.datastore.ReaderIdRepository
 import dev.ktekik.sahaf.home.HomeViewModel
 import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
+import dev.ktekik.sahaf.usecases.FetchListingsWithShippingUseCase
 import dev.ktekik.sahaf.usecases.FetchReaderIdUseCase
 import dev.ktekik.sahaf.usecases.PostReaderUseCase
 import dev.ktekik.sahaf.usecases.QueryReaderUseCase
@@ -38,6 +41,10 @@ val commonModule = module {
         readerApiBuilder(httpClient = get())
     }
 
+    factory<BookApi> {
+        bookApiBuilder(httpClient = get())
+    }
+
     factory { PostReaderUseCase(readerApi = get()) }
 
     factory { QueryReaderUseCase(readerApi = get()) }
@@ -47,6 +54,8 @@ val commonModule = module {
     factory { FetchReaderIdUseCase(get()) }
 
     factory { SaveReaderIdUseCase(readerIdRepository = get()) }
+
+    factory { FetchListingsWithShippingUseCase(bookApi = get()) }
 
     single { FtsNavigationViewModel(get()) }
 

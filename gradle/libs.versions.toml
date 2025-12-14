@@ -13,9 +13,11 @@ play-services-auth = "21.0.0"
 gitlive-firebase = "1.10.4"
 koin-bom = "3.5.3"
 orbit = "10.0.0"
-ktor = "2.3.12"
+ktor = "3.3.3"
 compose-navigation = "2.9.1"
 data-store = "1.2.0"
+kotlinx-datetime = "0.6.1"
+coil = "3.3.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -49,10 +51,15 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 data-store-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "data-store" }
 data-store-core = { module = "androidx.datastore:datastore", version.ref = "data-store" }
 
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+
 [bundles]
 android-compose = ["android-compose-foundation", "android-compose-material3", "android-compose-ui", "android-compose-ui-tooling", "android-compose-ui-tooling-preview", "androidx-activity-compose"]
 orbit = ["orbit-core", "orbit-viewmodel", "orbit-test", "orbit-compose"]
 koin = ["koin-core", "koin-compose"]
+coil = ["coil-network", "coil-compose"]
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
