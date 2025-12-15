@@ -1,5 +1,10 @@
 [versions]
 agp = "8.9.3"
+compileSdk = "36"
+targetSdk = "36"
+minSdk = "31"
+javaSource = "VERSION_17"
+javaTarget = "17"
 kotlin = "2.2.0"
 compose-multiplatform = "1.9.0"
 android-compose = "1.9.2"

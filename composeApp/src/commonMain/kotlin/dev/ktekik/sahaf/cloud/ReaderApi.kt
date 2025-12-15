@@ -19,12 +19,12 @@ interface ReaderApi {
     suspend fun queryReader(readerId: String): Flow<ApiResult<Reader>>
 }
 
-fun readerApiBuilder(httpClient: HttpClient): ReaderApi = ReaderApiImpl(httpClient)
+fun readerApiBuilder(httpClient: HttpClient, baseUrl: String): ReaderApi = ReaderApiImpl(httpClient, baseUrl)
 
-private class ReaderApiImpl(private val httpClient: HttpClient): ReaderApi {
+private class ReaderApiImpl(private val httpClient: HttpClient, private val baseUrl: String): ReaderApi {
     override suspend fun postReader(reader: Reader): Flow<ApiResult<Reader>> =  flow {
         try {
-            val response = httpClient.post("http://192.168.68.67:8080/readers") {
+            val response = httpClient.post("$baseUrl/readers") {
                 contentType(ContentType.Application.Json)
                 setBody(reader)
             }
@@ -45,7 +45,7 @@ private class ReaderApiImpl(private val httpClient: HttpClient): ReaderApi {
 
     override suspend fun queryReader(readerId: String): Flow<ApiResult<Reader>> = flow {
         try {
-            val response = httpClient.get("http://192.168.68.67:8080/readers/$readerId")
+            val response = httpClient.get("$baseUrl/readers/$readerId")
 
             if (response.status.isSuccess()) {
                 emit(ApiResult.Success(response.body()))

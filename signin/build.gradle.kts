@@ -19,7 +19,7 @@ kotlin {
         compilations.all {
             compileTaskProvider.configure {
                 compilerOptions {
-                    jvmTarget.set(JvmTarget.JVM_17)
+                    jvmTarget.set(JvmTarget.fromTarget(libs.versions.javaTarget.get()))
                 }
             }
         }
@@ -120,19 +120,31 @@ if (localPropertiesFile.exists()) {
 
 android {
     namespace = "dev.ktekik.sahaf"
-    compileSdk = 35
+    compileSdk = libs.versions.compileSdk.get().toInt()
     buildFeatures.buildConfig = true
     defaultConfig {
-        minSdk = 29
+        minSdk = libs.versions.minSdk.get().toInt()
 
         buildConfigField(
             "String",
             "GOOGLE_CLIENT_ID",
             "\"${localProperties.getProperty("clientId")}\""
         )
+
+        buildConfigField(
+            "String",
+            "BASE_URL_LOCAL",
+            "\"${properties["base_url_local"]}\""
+        )
+
+        buildConfigField(
+            "String",
+            "BASE_URL_SIM",
+            "\"${properties["base_url_sim"]}\""
+        )
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.valueOf(libs.versions.javaSource.get())
+        targetCompatibility = JavaVersion.valueOf(libs.versions.javaSource.get())
     }
 }

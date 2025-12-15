@@ -1,6 +1,7 @@
 package dev.ktekik.sahaf
 
 import android.app.Activity
+import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalView
@@ -8,7 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
 class AndroidPlatform : Platform {
-    override val name: String = "Android ${android.os.Build.VERSION.SDK_INT}"
+    override val name: String = "Android ${Build.VERSION.SDK_INT}"
 }
 
 actual fun getPlatform(): Platform = AndroidPlatform()
@@ -37,4 +38,18 @@ actual fun ShowStatusBarComposable() {
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
         }
     }
+}
+
+actual fun getBaseUrl(): String {
+    return if (isEmulator()) {
+        BuildConfig.BASE_URL_SIM
+    } else {
+        BuildConfig.BASE_URL_LOCAL
+    }
+}
+
+fun isEmulator(): Boolean {
+    return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
+            || Build.FINGERPRINT.startsWith("generic")
+            || Build.MANUFACTURER.contains("Genymotion")
 }

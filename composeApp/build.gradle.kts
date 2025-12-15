@@ -14,7 +14,7 @@ kotlin {
         compilations.all {
             compileTaskProvider.configure {
                 compilerOptions {
-                    jvmTarget.set(JvmTarget.JVM_17)
+                    jvmTarget.set(JvmTarget.fromTarget(libs.versions.javaTarget.get()))
                 }
             }
         }
@@ -81,12 +81,12 @@ kotlin {
 
 android {
     namespace = "dev.ktekik.sahaf"
-    compileSdk = 35
+    compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
-        minSdk = 29
+        minSdk = libs.versions.minSdk.get().toInt()
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.valueOf(libs.versions.javaSource.get())
+        targetCompatibility = JavaVersion.valueOf(libs.versions.javaSource.get())
     }
 }

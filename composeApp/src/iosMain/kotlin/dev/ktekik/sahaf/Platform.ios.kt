@@ -18,3 +18,7 @@ actual fun HideStatusBarComposable() {
 actual fun ShowStatusBarComposable() {
     TODO("Not yet implemented")
 }
+
+actual fun getBaseUrl(): String {
+    TODO("Not yet implemented")
+}

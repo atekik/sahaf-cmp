@@ -8,6 +8,8 @@ interface Platform {
 
 expect fun getPlatform(): Platform
 
+expect fun getBaseUrl(): String
+
 @Composable
 expect fun HideStatusBarComposable()
 

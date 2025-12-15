@@ -5,6 +5,7 @@ import dev.ktekik.sahaf.cloud.ReaderApi
 import dev.ktekik.sahaf.cloud.bookApiBuilder
 import dev.ktekik.sahaf.cloud.readerApiBuilder
 import dev.ktekik.sahaf.datastore.ReaderIdRepository
+import dev.ktekik.sahaf.getBaseUrl
 import dev.ktekik.sahaf.home.HomeViewModel
 import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
@@ -38,11 +39,11 @@ val commonModule = module {
     }
 
     factory<ReaderApi> {
-        readerApiBuilder(httpClient = get())
+        readerApiBuilder(httpClient = get(), baseUrl = getBaseUrl())
     }
 
     factory<BookApi> {
-        bookApiBuilder(httpClient = get())
+        bookApiBuilder(httpClient = get(), baseUrl = getBaseUrl())
     }
 
     factory { PostReaderUseCase(readerApi = get()) }
