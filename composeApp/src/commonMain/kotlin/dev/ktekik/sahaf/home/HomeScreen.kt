@@ -3,14 +3,12 @@ package dev.ktekik.sahaf.home
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.ktekik.sahaf.fts.ErrorContainer
 import org.koin.compose.koinInject
 
 @Composable
@@ -19,7 +17,7 @@ fun HomeScreen(homeViewModel: HomeViewModel = koinInject()) {
 
     when (val currentState = state) {
         is HomeScreenState.LoadingState -> HomeLoadingScreen()
-        is HomeScreenState.ErrorState -> HomeErrorScreen(currentState)
+        is HomeScreenState.ErrorState -> HomeErrorScreen()
         is HomeScreenState.ReadyState -> HomeReadyScreen(currentState)
     }
 }
@@ -32,12 +30,14 @@ private fun HomeLoadingScreen() {
 }
 
 @Composable
-private fun HomeErrorScreen(currentState: HomeScreenState.ErrorState) {
+private fun HomeErrorScreen(homeViewModel: HomeViewModel = koinInject()) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(
-            text = "Error: ${currentState.error}",
-            style = MaterialTheme.typography.headlineLarge,
-            textAlign = TextAlign.Center
+        ErrorContainer(
+            title = "Something went wrong!",
+            message = "Please try again later.",
+            onTryAgainClicked = {
+                homeViewModel.fetchReader()
+            }
         )
     }
 }

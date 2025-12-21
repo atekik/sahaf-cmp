@@ -2,10 +2,15 @@ package dev.ktekik.sahaf.usecases
 
 import dev.ktekik.sahaf.cloud.ApiResult
 import dev.ktekik.sahaf.cloud.BookApi
+import dev.ktekik.sahaf.cloud.ReaderApi
+import dev.ktekik.sahaf.home.HomeScreenState
+import dev.ktekik.sahaf.home.HomeScreenState.*
 import dev.ktekik.sahaf.models.CursorPagedListings
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.datetime.Instant
+import kotlin.uuid.ExperimentalUuidApi
 
 data class FetchListingsParams(
     val readerId: String,
@@ -14,26 +19,39 @@ data class FetchListingsParams(
     val before: Instant? = null
 )
 
-sealed class FetchListingsResult {
-    data class Success(val data: CursorPagedListings) : FetchListingsResult()
-    data class Error(val message: String?) : FetchListingsResult()
-}
-
 class FetchListingsWithShippingUseCase(
     private val bookApi: BookApi,
-) : UseCase<FetchListingsParams, FetchListingsResult> {
+    private val readerApi: ReaderApi
+) : UseCase<FetchListingsParams, HomeScreenState> {
 
-    override suspend fun execute(param: FetchListingsParams): Flow<FetchListingsResult> {
-        return bookApi.getListingsWithShipping(
-            readerId = param.readerId,
-            excludeSelf = param.excludeSelf,
-            limit = param.limit,
-            before = param.before
-        ).map {
-            when (it) {
-                is ApiResult.Success -> FetchListingsResult.Success(data = it.data)
-                is ApiResult.Error -> FetchListingsResult.Error(message = it.message)
+    @OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
+    override suspend fun
+            execute(param: FetchListingsParams): Flow<HomeScreenState> {
+        return readerApi.queryReader(param.readerId).combine(
+            bookApi.getListingsWithShipping(
+                readerId = param.readerId,
+                excludeSelf = param.excludeSelf,
+                limit = param.limit,
+                before = param.before
+            )
+        ) { readerResult, listingsResult ->
+            when (readerResult) {
+                is ApiResult.Success -> {
+                    when (listingsResult) {
+                        is ApiResult.Success<CursorPagedListings> -> ReadyState(
+                            readerResult.data,
+                            listingsResult.data
+                        )
+
+                        is ApiResult.Error -> {
+                            ErrorState(listingsResult.message ?: "Generic Error")
+                        }
+                    }
+                }
+
+                is ApiResult.Error -> ErrorState(readerResult.message ?: "Generic Error")
             }
+
         }
     }
 }

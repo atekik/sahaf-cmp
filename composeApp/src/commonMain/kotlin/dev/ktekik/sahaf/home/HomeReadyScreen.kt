@@ -76,7 +76,15 @@ internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState) {
                 contentPadding = PaddingValues(bottom = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(getMockRomanceBooks().toMutableList().apply {
+                items(currentState.listings.items.map {
+                    BookCardData(
+                        title = it.book.title,
+                        author = it.book.authors.firstOrNull() ?: "Unknown",
+                        description = it.book.textSnippet ?: "",
+                        coverColor = Color(0xFF6200EE),
+                        coverUrl = it.book.cover?.thumbnail
+                    )
+                }.toMutableList().apply {
                     addAll(getMockComedyBooks())
                     addAll(getMockPoetryBooks())
                     addAll(getMockShortStoryBooks())
@@ -145,14 +153,21 @@ private fun BookCard(
                     .aspectRatio(1f)
                     .background(book.coverColor)
             ) {
-                // TODO: Add book cover image
-                Text(
-                    text = book.title.take(1),
-                    fontSize = 48.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                if (book.coverUrl != null) {
+                    AsyncImage(
+                        model = book.coverUrl,
+                        contentDescription = "Book Cover",
+                        modifier = Modifier.fillMaxSize()
+                    )
+                } else {
+                    Text(
+                        text = book.title.take(1),
+                        fontSize = 48.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
             }
 
             // Book Info
@@ -322,7 +337,8 @@ private data class BookCardData(
     val author: String,
     val description: String,
     val coverColor: Color,
-    val rating: Float = 5f
+    val rating: Float = 5f,
+    val coverUrl: String? = null
 )
 
 private fun getMockPoetryBooks() = listOf(
@@ -341,14 +357,6 @@ private fun getMockPoetryBooks() = listOf(
         Color(0xFF311B92)
     ),
     BookCardData("My Heart", "Rachel Kalifa", "Lorem ipsum dolor sit sit", Color(0xFF1A237E))
-)
-
-private fun getMockRomanceBooks() = listOf(
-    BookCardData("Meet You", "Bill Silas", "Lorem ipsum dolor sit sit", Color(0xFFFF6F00)),
-    BookCardData("Moonstruck", "Amber Love", "Lorem ipsum dolor sit sit", Color(0xFF0D47A1)),
-    BookCardData("Sunset Kiss Last", "Harry Smith", "Lorem ipsum dolor sit sit", Color(0xFFE65100)),
-    BookCardData("My Life", "Ivan Toney", "Lorem ipsum dolor sit sit", Color(0xFF1B5E20)),
-    BookCardData("Always Unloved", "Mason Gibbs", "Lorem ipsum dolor sit sit", Color(0xFF827717))
 )
 
 private fun getMockShortStoryBooks() = listOf(

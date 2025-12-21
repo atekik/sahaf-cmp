@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -42,52 +43,80 @@ fun RegistrationFailedDialog(
     Dialog(onDismissRequest = { }) {
         Column(
             modifier = Modifier
+                .height(420.dp)
                 .fillMaxWidth()
                 .background(
                     color = MaterialTheme.colorScheme.errorContainer,
                     shape = RoundedCornerShape(16.dp)
-                )
-                .padding(24.dp),
+                ).padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(
-                painter = painterResource(Res.drawable.error_icon),
-                contentDescription = "Error Icon",
-                modifier = Modifier.size(64.dp),
-                tint = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(
-                text = "User Registration Failed!",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.error
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Something went wrong. Please make sure you are connected to internet and try again.",
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onErrorContainer
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            Button(
-                onClick = {
-                    readerRegistryViewModel.registerReader(navState.profile, {
-                        viewModel.navigateHome()
-                    })
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.onErrorContainer
-                )
+            ErrorContainer(
+                title = "Reader Registration Failed",
+                message = "Something went wrong. Please make sure you are connected to internet and try again.",
+                showTryAgainText = !registrationState.isLoading
             ) {
-                if (registrationState.isLoading) {
-                    CircularProgressIndicator()
-                } else {
-                    Text(text = "Try Again")
-                }
+                readerRegistryViewModel.registerReader(navState.profile, {
+                    viewModel.navigateHome()
+                })
+            }
+        }
+    }
+}
+
+@Composable
+fun ErrorContainer(
+    title: String,
+    message: String,
+    showTryAgainText: Boolean = true,
+    onTryAgainClicked: () -> Unit
+) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                color = MaterialTheme.colorScheme.errorContainer,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            painter = painterResource(Res.drawable.error_icon),
+            contentDescription = "Error Icon",
+            modifier = Modifier.size(64.dp),
+            tint = MaterialTheme.colorScheme.error
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = title,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.error
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onErrorContainer
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(
+            onClick = onTryAgainClicked,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.onErrorContainer
+            )
+        ) {
+            if (showTryAgainText) {
+                Text(text = "Try Again")
+            } else {
+                CircularProgressIndicator()
             }
         }
     }

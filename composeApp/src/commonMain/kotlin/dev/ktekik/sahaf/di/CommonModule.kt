@@ -56,7 +56,7 @@ val commonModule = module {
 
     factory { SaveReaderIdUseCase(readerIdRepository = get()) }
 
-    factory { FetchListingsWithShippingUseCase(bookApi = get()) }
+    factory { FetchListingsWithShippingUseCase(bookApi = get(), readerApi = get()) }
 
     single { FtsNavigationViewModel(get()) }
 

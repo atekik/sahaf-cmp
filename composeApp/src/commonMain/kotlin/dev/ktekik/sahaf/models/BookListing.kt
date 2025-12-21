@@ -10,7 +10,7 @@ import kotlin.uuid.Uuid
 data class BookListing(
     @Serializable(with = UuidSerializer::class)
     val readerId: Uuid,
-    val bookIsbn: String,
+    val book: Book,
     val createdAt: Instant,
     val updatedAt: Instant,
     val deliveryMethod: DeliveryMethod = DeliveryMethod.LocalPickup,

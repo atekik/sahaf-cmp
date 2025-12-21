@@ -2,24 +2,29 @@ package dev.ktekik.sahaf.usecases
 
 import dev.ktekik.sahaf.cloud.ApiResult
 import dev.ktekik.sahaf.cloud.ReaderApi
-import dev.ktekik.sahaf.home.HomeScreenState
+import dev.ktekik.sahaf.models.Reader
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class QueryReaderUseCase(
     private val readerApi: ReaderApi,
-) : UseCase<String, HomeScreenState> {
-    override suspend fun execute(param: String): Flow<HomeScreenState> {
+): UseCase<String, ReaderResponse> {
+    override suspend fun execute(param: String): Flow<ReaderResponse> {
         return readerApi.queryReader(param).map {
             when (it) {
                 is ApiResult.Success -> {
-                    HomeScreenState.ReadyState(reader = it.data)
+                    ReaderResponse.Success(reader = it.data)
                 }
 
                 is ApiResult.Error -> {
-                    HomeScreenState.ErrorState(error = it.message)
+                    ReaderResponse.Error(message = it.message)
                 }
             }
         }
     }
+}
+
+sealed interface ReaderResponse {
+    data class Success(val reader: Reader) : ReaderResponse
+    data class Error(val message: String?) : ReaderResponse
 }
