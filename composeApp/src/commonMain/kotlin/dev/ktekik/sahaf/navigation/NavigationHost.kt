@@ -11,6 +11,7 @@ import androidx.navigation.navigation
 import dev.ktekik.sahaf.fts.GetStartedScreen
 import dev.ktekik.sahaf.fts.RegistrationFailedDialog
 import dev.ktekik.sahaf.fts.RegistrationPendingDialog
+import dev.ktekik.sahaf.fts.SplashScreen
 import dev.ktekik.sahaf.fts.USZipcodeEntryScreen
 import dev.ktekik.sahaf.fts.WelcomeScreen
 import dev.ktekik.sahaf.home.HomeScreen
@@ -27,15 +28,15 @@ sealed class RegionCode(val code: String) {
 @Composable
 fun FtsNavHost() {
     val navController = rememberNavController()
-    val viewModel: FtsNavigationViewModel = koinInject()
     val readerRegistryViewModel: ReaderRegistryViewModel = koinInject()
-    val navState = viewModel.container.stateFlow.value
-    // Todo also check if user info saved to database. If so, start with home screen. If not,
-    val startDestination = navState.destination
 
     RouteObserver(navController)
 
-    NavHost(navController = navController, startDestination = startDestination.route) {
+    NavHost(navController = navController, startDestination = NavigationDestination.Splash.route) {
+        composable(NavigationDestination.Splash.route) {
+            SplashScreen()
+        }
+
         composable(NavigationDestination.GetStarted.route) {
             GetStartedScreen()
         }
@@ -46,6 +47,7 @@ fun FtsNavHost() {
             route = NavigationDestination.ZipcodeEntry.route,
         ) {
             when (Locale.current.region) {
+                RegionCode.Canada.code -> USZipcodeEntryScreen()
                 RegionCode.US.code -> USZipcodeEntryScreen()
                 else -> TODO("Not yet implemented")
             }

@@ -32,6 +32,23 @@ import dev.ktekik.utils.LocalResources
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 
+@Composable fun SplashScreen() {
+    CompositionLocalProvider(LocalResources provides ResourcesImpl()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets())
+                .paint(
+                    painter = painterResource(LocalResources.current.drawables.background),
+                    contentScale = ContentScale.Crop,
+                    alpha = .8f
+                )
+        ) {
+
+            LogoWithShadow(modifier = Modifier.align(Alignment.Center))
+        }
+    }
+}
 @Composable
 fun GetStartedScreen() {
 

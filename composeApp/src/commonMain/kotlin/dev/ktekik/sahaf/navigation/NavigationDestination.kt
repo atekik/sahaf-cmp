@@ -1,6 +1,7 @@
 package dev.ktekik.sahaf.navigation
 
 sealed class NavigationDestination(val route: String) {
+    data object Splash :  NavigationDestination("splash")
     data object GetStarted : NavigationDestination("fts_get_started")
     data object Welcome : NavigationDestination("fts_greet")
     data object ZipcodeEntry : NavigationDestination("zipcode_entry")

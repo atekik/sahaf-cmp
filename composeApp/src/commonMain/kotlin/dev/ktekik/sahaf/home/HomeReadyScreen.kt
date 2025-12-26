@@ -40,6 +40,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import dev.ktekik.sahaf.models.DeliveryMethod
+import dev.ktekik.sahaf.utils.getRelativeTimeString
 import org.jetbrains.compose.resources.painterResource
 import sahaf.composeapp.generated.resources.Res
 import sahaf.composeapp.generated.resources.ic_book_store
@@ -47,6 +49,15 @@ import sahaf.composeapp.generated.resources.ic_home
 import sahaf.composeapp.generated.resources.ic_notification
 import sahaf.composeapp.generated.resources.ic_search
 import sahaf.composeapp.generated.resources.short_logo
+
+private val rainbowArray = longArrayOf(
+    0xFF372780,
+    0xFF2C5499,
+    0xFF4F8D23,
+    0xFFE8C917,
+    0xFFE05D1A,
+    0xFFB9231F
+)
 
 @Composable
 internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState) {
@@ -76,18 +87,21 @@ internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState) {
                 contentPadding = PaddingValues(bottom = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(currentState.listings.items.map {
+                items(currentState.listings.items.mapIndexed { index, listing ->
                     BookCardData(
-                        title = it.book.title,
-                        author = it.book.authors.firstOrNull() ?: "Unknown",
-                        description = it.book.textSnippet ?: "",
-                        coverColor = Color(0xFF6200EE),
-                        coverUrl = it.book.cover?.thumbnail
+                        title = listing.book.title,
+                        author = listing.book.authors.firstOrNull() ?: "Unknown",
+                        description = listing.book.textSnippet ?: "",
+                        coverColor = Color(rainbowArray[index % rainbowArray.size]),
+                        coverUrl = listing.book.cover?.thumbnail,
+                        viewCount = listing.viewCount,
+                        deliveryMethod = when(listing.deliveryMethod) {
+                            DeliveryMethod.LocalPickup -> "Local pick up"
+                            DeliveryMethod.Shipping -> "Shipping"
+                            DeliveryMethod.LocalPickupAndShipping -> "Local pick up & Shipping"
+                        },
+                        lastUpdate = getRelativeTimeString(listing.updatedAt)
                     )
-                }.toMutableList().apply {
-                    addAll(getMockComedyBooks())
-                    addAll(getMockPoetryBooks())
-                    addAll(getMockShortStoryBooks())
                 }) { book ->
                     BookCard(book = book)
                 }
@@ -123,8 +137,6 @@ private fun HomeTopBar(
                 .clip(CircleShape)
                 .background(Color.LightGray)
         ) {
-            // TODO: Load profile picture from URL
-
             AsyncImage(
                 model = profilePictureUrl,
                 contentDescription = "User Profile Picture",
@@ -150,7 +162,7 @@ private fun BookCard(
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .aspectRatio(1f)
+                    .aspectRatio(0.96f)
                     .background(book.coverColor)
             ) {
                 if (book.coverUrl != null) {
@@ -204,15 +216,19 @@ private fun BookCard(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Rating Stars
-                Row {
-                    repeat(5) {
-                        Text(
-                            text = "⭐",
-                            fontSize = 12.sp
-                        )
-                    }
-                }
+                Text(
+                    text = book.deliveryMethod,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Text(
+                    text = "Last updated: ${book.lastUpdate}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
         }
     }
@@ -338,64 +354,8 @@ private data class BookCardData(
     val description: String,
     val coverColor: Color,
     val rating: Float = 5f,
-    val coverUrl: String? = null
-)
-
-private fun getMockPoetryBooks() = listOf(
-    BookCardData("Prisoner", "Arnod Miller", "Lorem ipsum dolor sit sit", Color(0xFFB71C1C)),
-    BookCardData(
-        "The Words I Cannot Say",
-        "Smith Brooks",
-        "Lorem ipsum dolor sit sit",
-        Color(0xFF880E4F)
-    ),
-    BookCardData("Embodied Hope", "James Alma", "Lorem ipsum dolor sit sit", Color(0xFF4A148C)),
-    BookCardData(
-        "The Thirteen Circle",
-        "Miller Brass",
-        "Lorem ipsum dolor sit sit",
-        Color(0xFF311B92)
-    ),
-    BookCardData("My Heart", "Rachel Kalifa", "Lorem ipsum dolor sit sit", Color(0xFF1A237E))
-)
-
-private fun getMockShortStoryBooks() = listOf(
-    BookCardData("Short Story", "Robert Graham", "Lorem ipsum dolor sit sit", Color(0xFF4E342E)),
-    BookCardData(
-        "Dream from Nepal",
-        "Mikel Oblack",
-        "Lorem ipsum dolor sit sit",
-        Color(0xFF006064)
-    ),
-    BookCardData(
-        "Two Flared Nostrils",
-        "Tom Story",
-        "Lorem ipsum dolor sit sit",
-        Color(0xFF37474F)
-    ),
-    BookCardData(
-        "The Tell-Tale Heart",
-        "Edglar Pok",
-        "Lorem ipsum dolor sit sit",
-        Color(0xFF263238)
-    ),
-    BookCardData("Riptides", "Williams James", "Lorem ipsum dolor sit sit", Color(0xFF3E2723))
-)
-
-private fun getMockComedyBooks() = listOf(
-    BookCardData("Love Maybe", "Ena Missirit", "Lorem ipsum dolor sit sit", Color(0xFFAD1457)),
-    BookCardData("Circumcised at 17", "Max Jacks", "Lorem ipsum dolor sit sit", Color(0xFF6A1B9A)),
-    BookCardData(
-        "Little Betty Finds a Condom",
-        "Shakes",
-        "Lorem ipsum dolor sit sit",
-        Color(0xFF4527A0)
-    ),
-    BookCardData(
-        "It Sounded Better in My Head",
-        "Water P",
-        "Lorem ipsum dolor sit sit",
-        Color(0xFF283593)
-    ),
-    BookCardData("Ditched Again", "James Milner", "Lorem ipsum dolor sit sit", Color(0xFF1565C0))
+    val coverUrl: String? = null,
+    val viewCount: Int = 0,
+    val deliveryMethod: String = "Local pick up & Shipping",
+    val lastUpdate: String = "10 mins ago"
 )
