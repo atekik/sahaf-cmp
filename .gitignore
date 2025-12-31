@@ -8,10 +8,10 @@ captures
 .cxx
 local.properties
 xcuserdata
-./androidApp/build
-./composeApp/build
-./androidApp/google-services.json
-./iosApp/iosApp/GoogleService-Info.plist
+/androidApp/build
+/composeApp/build
+/iosApp/iosApp/GoogleService-Info.plist
 SECURITY_REPORT.md
 .kotlin
 iosApp/Pods/
+/androidApp/google-services.json
