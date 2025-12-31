@@ -134,13 +134,13 @@ android {
         buildConfigField(
             "String",
             "BASE_URL_LOCAL",
-            "\"${properties["base_url_local"]}\""
+            "\"${localProperties.getProperty("base_url_local")}\""
         )
 
         buildConfigField(
             "String",
             "BASE_URL_SIM",
-            "\"${properties["base_url_sim"]}\""
+            "\"${localProperties.getProperty("base_url_local")}\""
         )
     }
     compileOptions {

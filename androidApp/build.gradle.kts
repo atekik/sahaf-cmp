@@ -9,10 +9,10 @@ plugins {
 }
 
 android {
-    namespace = "dev.ktekik.sahaf.android"
+    namespace = "dev.ktekik.sahaf"
     compileSdk = libs.versions.compileSdk.get().toInt()
     defaultConfig {
-        applicationId = "dev.ktekik.sahaf.android"
+        applicationId = "dev.ktekik.sahaf"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1

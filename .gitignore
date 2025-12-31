@@ -12,5 +12,6 @@ xcuserdata
 ./composeApp/build
 ./androidApp/google-services.json
 ./iosApp/iosApp/GoogleService-Info.plist
+SECURITY_REPORT.md
 .kotlin
 iosApp/Pods/

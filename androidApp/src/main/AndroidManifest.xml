@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".SahafApplication"
+        android:name=".android.SahafApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher_vertical"
         android:label="Sahaf"
@@ -13,7 +13,7 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".android.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
