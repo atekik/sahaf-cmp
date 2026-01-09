@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import dev.ktekik.barcodescanner.CameraPreview
 import dev.ktekik.sahaf.models.DeliveryMethod
 import dev.ktekik.sahaf.utils.getRelativeTimeString
 import org.jetbrains.compose.resources.painterResource
@@ -71,39 +72,55 @@ internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState) {
             )
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(paddingValues)
-        ) {
-            HomeTopBar(
-                userName = currentState.reader.name,
-                profilePictureUrl = currentState.reader.pictureURL
-            )
+        when (selectedNavItem) {
+            2 -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(paddingValues),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CameraPreview(modifier = Modifier)
+                }
+            }
 
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(bottom = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(currentState.listings.items.mapIndexed { index, listing ->
-                    BookCardData(
-                        title = listing.book.title,
-                        author = listing.book.authors.firstOrNull() ?: "Unknown",
-                        description = listing.book.textSnippet ?: "",
-                        coverColor = Color(rainbowArray[index % rainbowArray.size]),
-                        coverUrl = listing.book.cover?.thumbnail,
-                        viewCount = listing.viewCount,
-                        deliveryMethod = when(listing.deliveryMethod) {
-                            DeliveryMethod.LocalPickup -> "Local pick up"
-                            DeliveryMethod.Shipping -> "Shipping"
-                            DeliveryMethod.LocalPickupAndShipping -> "Local pick up & Shipping"
-                        },
-                        lastUpdate = getRelativeTimeString(listing.updatedAt)
+            else -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(paddingValues)
+                ) {
+                    HomeTopBar(
+                        userName = currentState.reader.name,
+                        profilePictureUrl = currentState.reader.pictureURL
                     )
-                }) { book ->
-                    BookCard(book = book)
+
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(bottom = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(currentState.listings.items.mapIndexed { index, listing ->
+                            BookCardData(
+                                title = listing.book.title,
+                                author = listing.book.authors.firstOrNull() ?: "Unknown",
+                                description = listing.book.textSnippet ?: "",
+                                coverColor = Color(rainbowArray[index % rainbowArray.size]),
+                                coverUrl = listing.book.cover?.thumbnail,
+                                viewCount = listing.viewCount,
+                                deliveryMethod = when (listing.deliveryMethod) {
+                                    DeliveryMethod.LocalPickup -> "Local pick up"
+                                    DeliveryMethod.Shipping -> "Shipping"
+                                    DeliveryMethod.LocalPickupAndShipping -> "Local pick up & Shipping"
+                                },
+                                lastUpdate = getRelativeTimeString(listing.updatedAt)
+                            )
+                        }) { book ->
+                            BookCard(book = book)
+                        }
+                    }
                 }
             }
         }
@@ -223,7 +240,7 @@ private fun BookCard(
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Text(
                     text = "Last updated: ${book.lastUpdate}",
                     style = MaterialTheme.typography.labelSmall,
@@ -301,12 +318,12 @@ private fun HomeBottomNavigationBar(
             icon = {
                 Icon(
                     painter = painterResource(Res.drawable.ic_search),
-                    contentDescription = "Search"
+                    contentDescription = "Scan"
                 )
             },
             label = {
                 Text(
-                    text = "Search",
+                    text = "Scan",
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold
                 )

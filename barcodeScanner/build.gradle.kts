@@ -2,9 +2,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlinCocoapods)
 }
 
 kotlin {
@@ -22,7 +23,6 @@ kotlin {
         }
     }
 
-
 // For iOS targets, this is also where you should
 // configure native binary output. For more information, see:
 // https://kotlinlang.org/docs/multiplatform-build-native-binaries.html#build-xcframeworks
@@ -30,23 +30,25 @@ kotlin {
 // A step-by-step guide on how to include this library in an XCode
 // project can be found here:
 // https://developer.android.com/kotlin/multiplatform/migrate
-    val xcfName = "utilsKit"
+    val xcfName = "barcodeScannerKit"
 
-    iosX64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
+    iosX64()
 
-    iosArm64 {
-        binaries.framework {
-            baseName = xcfName
-        }
-    }
+    iosArm64()
 
-    iosSimulatorArm64 {
-        binaries.framework {
-            baseName = xcfName
+    iosSimulatorArm64()
+
+    cocoapods {
+        summary = "Some description for the Shared Module"
+        homepage = "Link to the Shared Module homepage"
+        version = "1.0"
+        ios.deploymentTarget = "16.0"
+
+        noPodspec()
+
+        framework {
+            baseName = "barcodescanner"
+            isStatic = true
         }
     }
 
@@ -58,13 +60,18 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                // Add KMP dependencies here
+                implementation(project(":utils"))
+
                 implementation(compose.runtime)
-                implementation(compose.ui)
                 implementation(compose.foundation)
                 implementation(compose.material3)
-                implementation(compose.components.uiToolingPreview)
+                implementation(compose.ui)
                 implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
+
+                implementation(project.dependencies.platform(libs.koin.bom))
+                implementation(libs.bundles.orbit)
+                implementation(libs.bundles.koin)
             }
         }
 
@@ -79,6 +86,20 @@ kotlin {
                 // Add Android-specific dependencies here. Note that this source set depends on
                 // commonMain by default and will correctly pull the Android artifacts of any KMP
                 // dependencies declared in commonMain.
+                implementation(libs.play.services.auth)
+                implementation(libs.androidx.activity.compose)
+                implementation(libs.koin.android)
+                implementation(libs.koin.androidx.compose)
+
+                implementation(libs.androidx.camera.core)
+                implementation(libs.androidx.camera.compose)
+                implementation(libs.androidx.camera.lifecycle)
+                implementation(libs.androidx.camera.camera2)
+                implementation(libs.accompanist.permissions)
+                implementation(libs.mlkit.barcode.scanning)
+                implementation(libs.mlkit.vision.common)
+
+                implementation(project(":utils"))
             }
         }
 
@@ -92,7 +113,6 @@ kotlin {
             }
         }
     }
-
 }
 
 android {

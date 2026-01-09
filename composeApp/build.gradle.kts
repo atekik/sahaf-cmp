@@ -57,6 +57,7 @@ kotlin {
             implementation(libs.compose.navigation)
             implementation(project(":utils"))
             implementation(project(":signin"))
+            implementation(project(":barcodeScanner"))
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.bundles.orbit)
             implementation(libs.bundles.koin)

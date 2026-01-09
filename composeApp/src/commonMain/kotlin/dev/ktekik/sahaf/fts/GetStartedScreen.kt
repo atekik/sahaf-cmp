@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import dev.ktekik.sahaf.HideStatusBarComposable
 import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
 import dev.ktekik.sahaf.theming.md_theme_light_shadow
-import dev.ktekik.sahaf.utils.ResourcesImpl
 import dev.ktekik.utils.LocalResources
+import dev.ktekik.utils.ResourcesImpl
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 

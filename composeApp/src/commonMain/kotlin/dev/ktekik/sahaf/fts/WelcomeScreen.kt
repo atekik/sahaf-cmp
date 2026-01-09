@@ -24,10 +24,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dev.ktekik.sahaf.ShowStatusBarComposable
 import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
-import dev.ktekik.sahaf.utils.ResourcesImpl
 import dev.ktekik.signin.AuthResponse
 import dev.ktekik.signin.GoogleButton
 import dev.ktekik.utils.LocalResources
+import dev.ktekik.utils.ResourcesImpl
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 

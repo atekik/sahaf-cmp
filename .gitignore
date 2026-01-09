@@ -15,3 +15,5 @@ SECURITY_REPORT.md
 .kotlin
 iosApp/Pods/
 /androidApp/google-services.json
+/signin/build/
+/barcodeScanner/build/

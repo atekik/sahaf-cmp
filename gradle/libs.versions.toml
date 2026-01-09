@@ -24,6 +24,10 @@ data-store = "1.2.0"
 kotlinx-datetime = "0.6.1"
 coil = "3.3.0"
 
+camerax = "1.5.2"
+accompanist = "0.37.2"
+mlkit = "17.3.0"
+
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
@@ -33,21 +37,25 @@ android-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-
 android-compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "android-compose" }
 android-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
 compose-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "compose-navigation"}
+# firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-crashlyticsKtx = { module = "com.google.firebase:firebase-crashlytics-ktx", version.ref = "firebase-crashlytics" }
 firebase-gitlive-common = { module = "dev.gitlive:firebase-common", version.ref = "gitlive-firebase" }
 firebase-gitlive-auth = { module = "dev.gitlive:firebase-auth", version.ref = "gitlive-firebase" }
+#koin
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
 koin-core = { module = "io.insert-koin:koin-core" }
 koin-android = { module = "io.insert-koin:koin-android" }
 koin-compose = { module = "io.insert-koin:koin-compose"}
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
+#orbit
 orbit-core = { module = "org.orbit-mvi:orbit-core", version.ref = "orbit" }
 orbit-viewmodel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbit" }
 orbit-test = { module = "org.orbit-mvi:orbit-test", version.ref = "orbit" }
 orbit-compose = { module = "org.orbit-mvi:orbit-compose", version.ref = "orbit" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "play-services-auth" }
 
+#ktor
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-contentnegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
@@ -59,6 +67,15 @@ data-store-core = { module = "androidx.datastore:datastore", version.ref = "data
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+
+#camera and barcode scanner
+androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "camerax" }
+androidx-camera-compose = { module = "androidx.camera:camera-compose", version.ref = "camerax" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camerax" }
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
+mlkit-barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref="mlkit"}
+mlkit-vision-common = { module = "com.google.mlkit:vision-common", version.ref="mlkit"}
 
 [bundles]
 android-compose = ["android-compose-foundation", "android-compose-material3", "android-compose-ui", "android-compose-ui-tooling", "android-compose-ui-tooling-preview", "androidx-activity-compose"]
