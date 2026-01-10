@@ -41,11 +41,11 @@ import org.koin.compose.koinInject
 @Composable
 actual fun CameraPreview(
     modifier: Modifier,
-    onCameraReady: () -> Unit
+    onSuccessfulScan: (String) -> Unit
 ) {
     val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
     if (cameraPermissionState.status.isGranted) {
-        CameraPreviewContent(modifier)
+        CameraPreviewContent(modifier, onSuccessfulScan)
     } else {
         Column(
             modifier = modifier
@@ -79,6 +79,7 @@ actual fun CameraPreview(
 @Composable
 private fun CameraPreviewContent(
     modifier: Modifier = Modifier,
+    onSuccessfulScan: (String) -> Unit,
     viewModel: CameraPreviewViewModel = koinInject()
 ) {
     val barcodeScanningState by viewModel.container.stateFlow.collectAsStateWithLifecycle()
@@ -101,8 +102,7 @@ private fun CameraPreviewContent(
         }
 
         is BarcodeScanningState.Scanned -> {
-            // ToDo send the isbn to server
-            Text("Wow success!: ${state.rawValue}")
+            onSuccessfulScan(state.rawValue)
         }
 
         is BarcodeScanningState.Scanning -> {

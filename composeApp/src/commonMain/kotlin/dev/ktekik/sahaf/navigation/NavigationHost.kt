@@ -4,10 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.text.intl.Locale
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
+import kotlinx.serialization.Serializable
 import dev.ktekik.sahaf.fts.GetStartedScreen
 import dev.ktekik.sahaf.fts.RegistrationFailedDialog
 import dev.ktekik.sahaf.fts.RegistrationPendingDialog
@@ -15,6 +19,7 @@ import dev.ktekik.sahaf.fts.SplashScreen
 import dev.ktekik.sahaf.fts.USZipcodeEntryScreen
 import dev.ktekik.sahaf.fts.WelcomeScreen
 import dev.ktekik.sahaf.home.HomeScreen
+import dev.ktekik.sahaf.listing.BookListingScreen
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
 import org.koin.compose.koinInject
 
@@ -24,6 +29,9 @@ sealed class RegionCode(val code: String) {
     object Germany : RegionCode("DE")
     object UK : RegionCode("UK")
 }
+
+@Serializable
+data class IsbnRoute(val isbn: String)
 
 @Composable
 fun FtsNavHost() {
@@ -73,6 +81,17 @@ fun FtsNavHost() {
             ) {
                 HomeScreen()
             }
+
+            composable(
+                route = NavigationDestination.PostFTS.BookListing.homeRoute,
+                arguments = listOf(navArgument("isbn") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val isbn = backStackEntry.toRoute<IsbnRoute>().isbn
+                BookListingScreen(
+                    isbn = isbn,
+                    onBackPressed = { navController.popBackStack() }
+                )
+            }
         }
 
     }
@@ -80,18 +99,22 @@ fun FtsNavHost() {
 
 @Composable
 fun RouteObserver(navController: NavController) {
-    val viewModel: FtsNavigationViewModel = koinInject()
+    val navigationViewModel: NavigationViewModel = koinInject()
 
     LaunchedEffect(Unit) {
-        viewModel.container.sideEffectFlow.collect { sideEffect ->
-            when (sideEffect) {
-                is NavigationSideEffect.NavigateTo -> {
-                    navController.navigate(
-                        route = sideEffect.destination.route,
-                    ) {
-                        popUpTo(navController.graph.id) {
-                            inclusive = true
-                        }
+        navigationViewModel.container.sideEffectFlow.collect { sideEffect ->
+            handleNavigationSideEffect(navController, sideEffect)
+        }
+    }
+}
+
+private fun handleNavigationSideEffect(navController: NavController, sideEffect: NavigationSideEffect) {
+    when (sideEffect) {
+        is NavigationSideEffect.NavigateTo -> {
+            navController.navigate(route = sideEffect.destination.route) {
+                if (sideEffect.popUpTo) {
+                    popUpTo(navController.graph.id) {
+                        inclusive = sideEffect.popUpToInclusive
                     }
                 }
             }

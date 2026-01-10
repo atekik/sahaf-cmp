@@ -7,7 +7,7 @@ import dev.ktekik.barcodescanner.exception.NotTurkishException
 
 object IsbnValidator {
     val isbnRegex = Regex("^(978|979)[0-9]{10}\$")
-    val turkishIsbnRegex = Regex("^[0-9]{3}(605|975)[0-9]{7}\$")
+    val turkishIsbnRegex = Regex("^[0-9]{3}(605|625|975)[0-9]{7}\$")
     val turkishIsbnRegex2 = Regex("^[0-9]{3}(9944)[0-9]{6}\$")
 
     fun validateISBN(isbn: String?): String {

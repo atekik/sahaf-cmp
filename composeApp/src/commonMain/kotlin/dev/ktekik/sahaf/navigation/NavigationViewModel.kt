@@ -9,7 +9,7 @@ import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 
-class FtsNavigationViewModel(fetchReaderIdUseCase: FetchReaderIdUseCase) : ViewModel(),
+class NavigationViewModel(fetchReaderIdUseCase: FetchReaderIdUseCase) : ViewModel(),
     ContainerHost<NavigationState, NavigationSideEffect> {
     override val container: Container<NavigationState, NavigationSideEffect> =
         container(NavigationState())
@@ -94,6 +94,17 @@ class FtsNavigationViewModel(fetchReaderIdUseCase: FetchReaderIdUseCase) : ViewM
                     NavigationDestination.RegistrationFailedDialog,
                     popUpTo = true,
                     popUpToInclusive = true
+                )
+            )
+        }
+    }
+    fun onIsbnScanned(isbn: String) {
+        intent {
+            postSideEffect(
+                NavigationSideEffect.NavigateTo(
+                    destination = NavigationDestination.PostFTS.BookListing.apply {
+                        createRoute(isbn)
+                    }
                 )
             )
         }

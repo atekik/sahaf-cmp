@@ -23,7 +23,7 @@ sealed interface BarcodeScanningState {
     class Error(val message: String) : BarcodeScanningState
 }
 
-@ExperimentalGetImage
+@androidx.annotation.OptIn(ExperimentalGetImage::class)
 class CameraPreviewViewModel : ViewModel(), ContainerHost<BarcodeScanningState, Unit> {
 
     override val container: Container<BarcodeScanningState, Unit> = container(

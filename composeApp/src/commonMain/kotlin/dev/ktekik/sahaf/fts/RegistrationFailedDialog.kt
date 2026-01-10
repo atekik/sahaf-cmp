@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
+import dev.ktekik.sahaf.navigation.NavigationViewModel
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
 import dev.ktekik.utils.composables.ErrorContainer
 import org.koin.compose.koinInject
@@ -24,7 +24,7 @@ import org.koin.compose.koinInject
 fun RegistrationFailedDialog(
     readerRegistryViewModel: ReaderRegistryViewModel,
 ) {
-    val viewModel: FtsNavigationViewModel = koinInject()
+    val viewModel: NavigationViewModel = koinInject()
     val navState by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     val registrationState by readerRegistryViewModel.container.stateFlow.collectAsStateWithLifecycle()
 

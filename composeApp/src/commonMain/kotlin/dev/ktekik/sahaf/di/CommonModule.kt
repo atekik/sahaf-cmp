@@ -7,10 +7,12 @@ import dev.ktekik.sahaf.cloud.readerApiBuilder
 import dev.ktekik.sahaf.datastore.ReaderIdRepository
 import dev.ktekik.sahaf.getBaseUrl
 import dev.ktekik.sahaf.home.HomeViewModel
-import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
+import dev.ktekik.sahaf.listing.BookListingViewModel
+import dev.ktekik.sahaf.navigation.NavigationViewModel
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
 import dev.ktekik.sahaf.usecases.FetchListingsWithShippingUseCase
 import dev.ktekik.sahaf.usecases.FetchReaderIdUseCase
+import dev.ktekik.sahaf.usecases.IsbnQueryUseCase
 import dev.ktekik.sahaf.usecases.PostReaderUseCase
 import dev.ktekik.sahaf.usecases.QueryReaderUseCase
 import dev.ktekik.sahaf.usecases.SaveReaderIdUseCase
@@ -58,11 +60,15 @@ val commonModule = module {
 
     factory { FetchListingsWithShippingUseCase(bookApi = get(), readerApi = get()) }
 
-    single { FtsNavigationViewModel(get()) }
+    factory { IsbnQueryUseCase(bookApi = get()) }
+
+    single { NavigationViewModel(get()) }
 
     single { HomeViewModel(get(), get()) }
 
     factory { ReaderRegistryViewModel(postReaderUseCase = get(), saveReaderIdUseCase = get()) }
+
+    factory { BookListingViewModel(isbnQueryUseCase = get()) }
 }
 
 fun initKoin(config: KoinAppDeclaration = {}) {

@@ -28,14 +28,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
+import dev.ktekik.sahaf.navigation.NavigationViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
 @Preview
 @Composable
 fun USZipcodeEntryScreen() {
-    val viewModel: FtsNavigationViewModel = koinInject()
+    val viewModel: NavigationViewModel = koinInject()
 
     val state by viewModel.container.stateFlow.collectAsStateWithLifecycle()
     var zipcode by remember { mutableStateOf("") }

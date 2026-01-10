@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 @Composable
 actual fun CameraPreview(
     modifier: Modifier,
-    onCameraReady: () -> Unit
+    onSuccessfulScan: (String) -> Unit
 ) {
 
 }

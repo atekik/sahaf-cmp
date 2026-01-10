@@ -25,7 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import dev.ktekik.sahaf.HideStatusBarComposable
-import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
+import dev.ktekik.sahaf.navigation.NavigationViewModel
 import dev.ktekik.sahaf.theming.md_theme_light_shadow
 import dev.ktekik.utils.LocalResources
 import dev.ktekik.utils.ResourcesImpl
@@ -75,7 +75,7 @@ fun GetStartedScreen() {
 
 @Composable
 fun GetStartedButton(modifier: Modifier) {
-    val viewModel: FtsNavigationViewModel = koinInject()
+    val viewModel: NavigationViewModel = koinInject()
 
     Button(
         modifier = modifier.padding(

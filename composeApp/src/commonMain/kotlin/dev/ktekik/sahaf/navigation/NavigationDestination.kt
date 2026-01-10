@@ -9,8 +9,12 @@ sealed class NavigationDestination(val route: String) {
     data object RegistrationFailedDialog : NavigationDestination("registration_failed")
 
     data object Home : NavigationDestination("home")
-    sealed class PostFTS(val homeRoute: String) : NavigationDestination("post_fts") {
+    sealed class PostFTS(val homeRoute: String) : NavigationDestination(homeRoute) {
         data object HomeLanding : PostFTS("home_landing")
+
+        data object BookListing : PostFTS("book_listing/{isbn}") {
+            fun createRoute(isbn: String) = "book_listing/$isbn"
+        }
     }
 }
 

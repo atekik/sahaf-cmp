@@ -42,8 +42,10 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import dev.ktekik.barcodescanner.CameraPreview
 import dev.ktekik.sahaf.models.DeliveryMethod
+import dev.ktekik.sahaf.navigation.NavigationViewModel
 import dev.ktekik.sahaf.utils.getRelativeTimeString
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 import sahaf.composeapp.generated.resources.Res
 import sahaf.composeapp.generated.resources.ic_book_store
 import sahaf.composeapp.generated.resources.ic_home
@@ -61,7 +63,7 @@ private val rainbowArray = longArrayOf(
 )
 
 @Composable
-internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState) {
+internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState, navigationViewModel: NavigationViewModel = koinInject()) {
     var selectedNavItem by remember { mutableIntStateOf(0) }
 
     Scaffold(
@@ -81,7 +83,9 @@ internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState) {
                         .padding(paddingValues),
                     contentAlignment = Alignment.Center
                 ) {
-                    CameraPreview(modifier = Modifier)
+                    CameraPreview(modifier = Modifier) { isbn ->
+                        navigationViewModel.onIsbnScanned(isbn)
+                    }
                 }
             }
 

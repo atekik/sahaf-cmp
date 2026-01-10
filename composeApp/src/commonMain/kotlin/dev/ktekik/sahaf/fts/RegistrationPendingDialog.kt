@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.ktekik.sahaf.navigation.FtsNavigationViewModel
+import dev.ktekik.sahaf.navigation.NavigationViewModel
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -52,7 +52,7 @@ fun RegistrationPendingDialog(
     readerRegistryViewModel: ReaderRegistryViewModel,
     onDismissRequest: () -> Unit = {},
 ) {
-    val viewModel: FtsNavigationViewModel = koinInject()
+    val viewModel: NavigationViewModel = koinInject()
     val navState by viewModel.container.stateFlow.collectAsStateWithLifecycle()
 
     Dialog(

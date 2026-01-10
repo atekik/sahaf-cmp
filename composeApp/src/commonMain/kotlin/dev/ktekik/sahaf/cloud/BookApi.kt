@@ -1,5 +1,6 @@
 package dev.ktekik.sahaf.cloud
 
+import dev.ktekik.sahaf.models.Book
 import dev.ktekik.sahaf.models.CursorPagedListings
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -18,6 +19,8 @@ interface BookApi {
         limit: Int? = null,
         before: Instant? = null
     ): Flow<ApiResult<CursorPagedListings>>
+
+    suspend fun queryByIsbn(isbn: String): Flow<ApiResult<Book>>
 }
 
 fun bookApiBuilder(httpClient: HttpClient, baseUrl: String = "http://192.168.68.67:8080"): BookApi =
@@ -41,6 +44,25 @@ private class BookApiImpl(
                 limit?.let { parameter("limit", it) }
                 before?.let { parameter("before", it.toString()) }
             }
+
+            if (response.status.isSuccess()) {
+                emit(ApiResult.Success(response.body()))
+            } else {
+                val errorBody = response.bodyAsText()
+                val errorMessage =
+                    "Request failed with status ${response.status}. Server said: $errorBody"
+                println(errorMessage)
+                emit(ApiResult.Error(message = errorMessage))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(ApiResult.Error(message = e.message))
+        }
+    }
+
+    override suspend fun queryByIsbn(isbn: String): Flow<ApiResult<Book>> = flow {
+        try {
+            val response = httpClient.get("$baseUrl/isbn/$isbn")
 
             if (response.status.isSuccess()) {
                 emit(ApiResult.Success(response.body()))
