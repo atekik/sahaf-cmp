@@ -140,7 +140,7 @@ android {
         buildConfigField(
             "String",
             "BASE_URL_SIM",
-            "\"${localProperties.getProperty("base_url_local")}\""
+            "\"${localProperties.getProperty("base_url_sim")}\""
         )
     }
     compileOptions {

@@ -11,10 +11,10 @@ data class BookListing(
     @Serializable(with = UuidSerializer::class)
     val readerId: Uuid,
     val book: Book,
-    val createdAt: Instant,
-    val updatedAt: Instant,
+    val createdAt: Instant? = null,
+    val updatedAt: Instant? = null,
     val deliveryMethod: DeliveryMethod = DeliveryMethod.LocalPickup,
-    val likes: List<String>,
+    val likes: Set<String>,
     val viewCount: Int = 0,
     @Serializable(with = UuidSerializer::class)
     val listingUuid: Uuid?,

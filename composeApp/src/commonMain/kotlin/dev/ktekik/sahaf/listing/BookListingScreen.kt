@@ -170,9 +170,9 @@ private fun BookCoverSection(book: Book) {
                     .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
                 contentAlignment = Alignment.Center
             ) {
-                if (book.cover?.thumbnail != null) {
+                if (book.cover?.medium != null) {
                     AsyncImage(
-                        model = book.cover.thumbnail,
+                        model = book.cover.medium,
                         contentDescription = "Book Cover",
                         modifier = Modifier.fillMaxSize()
                     )
@@ -243,20 +243,22 @@ private fun BookInfoSection(book: Book) {
         // Published Date
         InfoRow(label = "Published", value = book.publishedDate)
 
-        // Language
-        book.language?.let { language ->
-            InfoRow(label = "Language", value = language.uppercase())
+        // Publishers
+        book.publishers?.let { publishers ->
+            if (publishers.isNotEmpty()) {
+                InfoRow(label = "Publishers", value = publishers.joinToString(", "))
+            }
         }
 
-        // Categories
-        book.categories?.let { categories ->
-            if (categories.isNotEmpty()) {
-                InfoRow(label = "Categories", value = categories.joinToString(", "))
+        // Subjects
+        book.subjects?.let { subjects ->
+            if (subjects.isNotEmpty()) {
+                InfoRow(label = "Subjects", value = subjects.joinToString(", "))
             }
         }
 
         // Description/Snippet
-        book.textSnippet?.let { snippet ->
+        book.snippets?.firstOrNull()?.let { snippet ->
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "Description",

@@ -110,16 +110,16 @@ internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState, navigatio
                             BookCardData(
                                 title = listing.book.title,
                                 author = listing.book.authors.firstOrNull() ?: "Unknown",
-                                description = listing.book.textSnippet ?: "",
+                                description = listing.book.snippets?.firstOrNull() ?: "",
                                 coverColor = Color(rainbowArray[index % rainbowArray.size]),
-                                coverUrl = listing.book.cover?.thumbnail,
+                                coverUrl = listing.book.cover?.medium ?: listing.book.cover?.small,
                                 viewCount = listing.viewCount,
                                 deliveryMethod = when (listing.deliveryMethod) {
                                     DeliveryMethod.LocalPickup -> "Local pick up"
                                     DeliveryMethod.Shipping -> "Shipping"
                                     DeliveryMethod.LocalPickupAndShipping -> "Local pick up & Shipping"
                                 },
-                                lastUpdate = getRelativeTimeString(listing.updatedAt)
+                                lastUpdate = listing.updatedAt?.let { getRelativeTimeString(it) } ?: ""
                             )
                         }) { book ->
                             BookCard(book = book)
