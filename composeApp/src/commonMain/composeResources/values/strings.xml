@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Sahaf</string>
+    
+    <!-- Content Descriptions -->
+    <string name="cd_sahaf_logo">Sahaf Logo</string>
+    <string name="cd_user_profile_picture">User Profile Picture</string>
+    <string name="cd_book_cover">Book Cover</string>
+    <string name="cd_app_logo">App Logo</string>
+    <string name="cd_book_image">Book image</string>
+    <string name="cd_person_icon">Person Icon</string>
+    <string name="cd_loading">Loading</string>
+    <string name="cd_error_icon">Error Icon</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_notification">Notification</string>
+    <string name="nav_scan">Scan</string>
+    <string name="nav_book_store">Book Store</string>
+    
+    <!-- Delivery Methods -->
+    <string name="delivery_local_pickup">Local pick up</string>
+    <string name="delivery_shipping">Shipping</string>
+    <string name="delivery_local_pickup_and_shipping">Local pick up &amp; Shipping</string>
+    
+    <!-- Book Listing -->
+    <string name="last_updated">Last updated: %1$s</string>
+    <string name="unknown_author">Unknown</string>
+    <string name="book_details">Book Details</string>
+    <string name="back">Back</string>
+    <string name="book_information">Book Information</string>
+    <string name="label_isbn">ISBN</string>
+    <string name="label_pages">Pages</string>
+    <string name="label_published">Published</string>
+    <string name="label_publishers">Publishers</string>
+    <string name="label_subjects">Subjects</string>
+    <string name="label_description">Description</string>
+    <string name="by_author">by %1$s</string>
+    <string name="failed_to_load_book">Failed to load book</string>
+    
+    <!-- Welcome Screen -->
+    <string name="welcome_title">Welcome to Sahaf</string>
+    <string name="welcome_subtitle">A platform to share Turkish books</string>
+    <string name="welcome_tagline">Reserve. Meet. Borrow. Read.\nList. Ship. Rinse &amp; Repeat.</string>
+    <string name="error_auth_failed">Error: Authentication Failed</string>
+    <string name="error_cancelled">Error: Cancelled</string>
+    <string name="dismiss">Dismiss</string>
+    
+    <!-- Get Started Screen -->
+    <string name="get_started">Get Started</string>
+    
+    <!-- Zipcode Entry Screen -->
+    <string name="enter_zipcode">Enter Zipcode</string>
+    <string name="zipcode_instruction">Please enter your zipcode to see books near you:</string>
+    
+    <!-- Registration Dialogs -->
+    <string name="sign_in_successful">Sign In Successful!</string>
+    <string name="account_creating_message">Your account is being created. Please wait a moment, we are preparing for you.</string>
+    <string name="registration_failed_title">Reader Registration Failed</string>
+    <string name="registration_failed_message">Something went wrong. Please make sure you are connected to internet and try again.</string>
+    
+    <!-- Errors -->
+    <string name="error_something_went_wrong">Something went wrong!</string>
+    <string name="error_try_again_later">Please try again later.</string>
+    <string name="try_again">Try Again</string>
+    
+    <!-- Time Strings -->
+    <string name="time_just_now">Just now</string>
+    <string name="time_minute_ago">1 minute ago</string>
+    <string name="time_minutes_ago">%1$d minutes ago</string>
+    <string name="time_today_at">Today at %1$s</string>
+    <string name="time_yesterday_at">Yesterday at %1$s</string>
+    <string name="time_on_date">on %1$s</string>
+    <string name="time_am">AM</string>
+    <string name="time_pm">PM</string>
+</resources>

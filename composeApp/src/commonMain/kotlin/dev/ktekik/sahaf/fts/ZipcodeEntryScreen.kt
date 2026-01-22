@@ -29,8 +29,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.ktekik.sahaf.navigation.NavigationViewModel
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
+import sahaf.composeapp.generated.resources.Res
+import sahaf.composeapp.generated.resources.enter_zipcode
+import sahaf.composeapp.generated.resources.zipcode_instruction
 
 @Preview
 @Composable
@@ -61,7 +65,7 @@ fun USZipcodeEntryScreen() {
 
             // Title
             Text(
-                text = "Enter Zipcode",
+                text = stringResource(Res.string.enter_zipcode),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -72,7 +76,7 @@ fun USZipcodeEntryScreen() {
 
             // Instruction text
             Text(
-                text = "Please enter your zipcode to see books near you:",
+                text = stringResource(Res.string.zipcode_instruction),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.fillMaxWidth()

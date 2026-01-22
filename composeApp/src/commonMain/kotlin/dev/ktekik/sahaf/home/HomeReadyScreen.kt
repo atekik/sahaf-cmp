@@ -27,31 +27,51 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
+import coil3.compose.rememberAsyncImagePainter
+import kotlinx.coroutines.flow.filterIsInstance
 import dev.ktekik.barcodescanner.CameraPreview
 import dev.ktekik.sahaf.models.DeliveryMethod
 import dev.ktekik.sahaf.navigation.NavigationViewModel
 import dev.ktekik.sahaf.utils.getRelativeTimeString
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import sahaf.composeapp.generated.resources.Res
+import sahaf.composeapp.generated.resources.cd_book_cover
+import sahaf.composeapp.generated.resources.cd_sahaf_logo
+import sahaf.composeapp.generated.resources.cd_user_profile_picture
+import sahaf.composeapp.generated.resources.delivery_local_pickup
+import sahaf.composeapp.generated.resources.delivery_local_pickup_and_shipping
+import sahaf.composeapp.generated.resources.delivery_shipping
 import sahaf.composeapp.generated.resources.ic_book_store
 import sahaf.composeapp.generated.resources.ic_home
 import sahaf.composeapp.generated.resources.ic_notification
 import sahaf.composeapp.generated.resources.ic_search
+import sahaf.composeapp.generated.resources.last_updated
+import sahaf.composeapp.generated.resources.nav_book_store
+import sahaf.composeapp.generated.resources.nav_home
+import sahaf.composeapp.generated.resources.nav_notification
+import sahaf.composeapp.generated.resources.nav_scan
 import sahaf.composeapp.generated.resources.short_logo
+import sahaf.composeapp.generated.resources.unknown_author
 
 private val rainbowArray = longArrayOf(
     0xFF372780,
@@ -101,6 +121,11 @@ internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState, navigatio
                         profilePictureUrl = currentState.reader.pictureURL
                     )
 
+                    val unknownAuthor = stringResource(Res.string.unknown_author)
+                    val deliveryLocalPickup = stringResource(Res.string.delivery_local_pickup)
+                    val deliveryShipping = stringResource(Res.string.delivery_shipping)
+                    val deliveryLocalPickupAndShipping = stringResource(Res.string.delivery_local_pickup_and_shipping)
+
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(bottom = 16.dp),
@@ -109,15 +134,15 @@ internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState, navigatio
                         items(currentState.listings.items.mapIndexed { index, listing ->
                             BookCardData(
                                 title = listing.book.title,
-                                author = listing.book.authors.firstOrNull() ?: "Unknown",
+                                author = listing.book.authors.firstOrNull() ?: unknownAuthor,
                                 description = listing.book.snippets?.firstOrNull() ?: "",
                                 coverColor = Color(rainbowArray[index % rainbowArray.size]),
                                 coverUrl = listing.book.cover?.medium ?: listing.book.cover?.small,
                                 viewCount = listing.viewCount,
                                 deliveryMethod = when (listing.deliveryMethod) {
-                                    DeliveryMethod.LocalPickup -> "Local pick up"
-                                    DeliveryMethod.Shipping -> "Shipping"
-                                    DeliveryMethod.LocalPickupAndShipping -> "Local pick up & Shipping"
+                                    DeliveryMethod.LocalPickup -> deliveryLocalPickup
+                                    DeliveryMethod.Shipping -> deliveryShipping
+                                    DeliveryMethod.LocalPickupAndShipping -> deliveryLocalPickupAndShipping
                                 },
                                 lastUpdate = listing.updatedAt?.let { getRelativeTimeString(it) } ?: ""
                             )
@@ -147,7 +172,7 @@ private fun HomeTopBar(
         // Logo
         Image(
             painter = painterResource(Res.drawable.short_logo),
-            contentDescription = "Sahaf Logo",
+            contentDescription = stringResource(Res.string.cd_sahaf_logo),
             modifier = Modifier.height(48.dp)
         )
 
@@ -160,7 +185,7 @@ private fun HomeTopBar(
         ) {
             AsyncImage(
                 model = profilePictureUrl,
-                contentDescription = "User Profile Picture",
+                contentDescription = stringResource(Res.string.cd_user_profile_picture),
                 modifier = Modifier.clip(CircleShape).size(48.dp),
             )
         }
@@ -172,6 +197,10 @@ private fun BookCard(
     book: BookCardData,
     modifier: Modifier = Modifier
 ) {
+    // Create painter for the book cover
+    val painter = rememberAsyncImagePainter(model = book.coverUrl)
+
+
     Card(
         modifier = modifier.fillMaxWidth().padding(horizontal = 8.dp),
         shape = MaterialTheme.shapes.medium,
@@ -184,12 +213,12 @@ private fun BookCard(
                 modifier = Modifier
                     .weight(1f)
                     .aspectRatio(0.96f)
-                    .background(book.coverColor)
             ) {
                 if (book.coverUrl != null) {
-                    AsyncImage(
-                        model = book.coverUrl,
-                        contentDescription = "Book Cover",
+                    Image(
+                        painter = painter,
+                        contentScale = ContentScale.Crop,
+                        contentDescription = stringResource(Res.string.cd_book_cover),
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
@@ -246,7 +275,7 @@ private fun BookCard(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Last updated: ${book.lastUpdate}",
+                    text = stringResource(Res.string.last_updated, book.lastUpdate),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -272,12 +301,12 @@ private fun HomeBottomNavigationBar(
             icon = {
                 Icon(
                     painter = painterResource(Res.drawable.ic_home),
-                    contentDescription = "Home"
+                    contentDescription = stringResource(Res.string.nav_home)
                 )
             },
             label = {
                 Text(
-                    text = "Home",
+                    text = stringResource(Res.string.nav_home),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -297,12 +326,12 @@ private fun HomeBottomNavigationBar(
             icon = {
                 Icon(
                     painter = painterResource(Res.drawable.ic_notification),
-                    contentDescription = "Notification"
+                    contentDescription = stringResource(Res.string.nav_notification)
                 )
             },
             label = {
                 Text(
-                    text = "Notification",
+                    text = stringResource(Res.string.nav_notification),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -322,12 +351,12 @@ private fun HomeBottomNavigationBar(
             icon = {
                 Icon(
                     painter = painterResource(Res.drawable.ic_search),
-                    contentDescription = "Scan"
+                    contentDescription = stringResource(Res.string.nav_scan)
                 )
             },
             label = {
                 Text(
-                    text = "Scan",
+                    text = stringResource(Res.string.nav_scan),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -347,12 +376,12 @@ private fun HomeBottomNavigationBar(
             icon = {
                 Icon(
                     painter = painterResource(Res.drawable.ic_book_store),
-                    contentDescription = "Book Store"
+                    contentDescription = stringResource(Res.string.nav_book_store)
                 )
             },
             label = {
                 Text(
-                    text = "Book Store",
+                    text = stringResource(Res.string.nav_book_store),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold
                 )

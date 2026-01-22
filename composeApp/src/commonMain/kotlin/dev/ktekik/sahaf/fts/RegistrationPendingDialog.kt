@@ -40,10 +40,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import sahaf.composeapp.generated.resources.Res
+import sahaf.composeapp.generated.resources.account_creating_message
+import sahaf.composeapp.generated.resources.cd_loading
+import sahaf.composeapp.generated.resources.cd_person_icon
 import sahaf.composeapp.generated.resources.loading_vector
 import sahaf.composeapp.generated.resources.reader_registering_icon
+import sahaf.composeapp.generated.resources.sign_in_successful
 
 // Colors matching the screenshot description
 
@@ -92,7 +97,7 @@ fun RegistrationPendingDialog(
                     ) {
                         Image(
                             painter = painterResource(Res.drawable.reader_registering_icon),
-                            contentDescription = "Person Icon",
+                            contentDescription = stringResource(Res.string.cd_person_icon),
                         )
                     }
                 }
@@ -101,7 +106,7 @@ fun RegistrationPendingDialog(
 
                 // Primary message
                 Text(
-                    text = "Sign In Successful!",
+                    text = stringResource(Res.string.sign_in_successful),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary,
@@ -112,7 +117,7 @@ fun RegistrationPendingDialog(
 
                 // Informational message
                 Text(
-                    text = "Your account is being created. Please wait a moment, we are preparing for you.",
+                    text = stringResource(Res.string.account_creating_message),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center,
@@ -160,7 +165,7 @@ fun VectorCircularProgressIndicator(
 
     Image(
         painter = painterResource(Res.drawable.loading_vector),
-        contentDescription = "Loading",
+        contentDescription = stringResource(Res.string.cd_loading),
         modifier = modifier
             .rotate(angle) // Apply the rotation here
     )

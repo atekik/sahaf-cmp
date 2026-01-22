@@ -30,7 +30,11 @@ import dev.ktekik.sahaf.theming.md_theme_light_shadow
 import dev.ktekik.utils.LocalResources
 import dev.ktekik.utils.ResourcesImpl
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import sahaf.composeapp.generated.resources.Res
+import sahaf.composeapp.generated.resources.cd_app_logo
+import sahaf.composeapp.generated.resources.get_started
 
 @Composable fun SplashScreen() {
     CompositionLocalProvider(LocalResources provides ResourcesImpl()) {
@@ -96,7 +100,7 @@ fun GetStartedButton(modifier: Modifier) {
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
     ) {
         Text(
-            text = "Get Started",
+            text = stringResource(Res.string.get_started),
             color = LocalContentColor.current,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
@@ -108,7 +112,7 @@ fun GetStartedButton(modifier: Modifier) {
 fun LogoWithShadow(modifier: Modifier) {
     Image(
         painter = painterResource(LocalResources.current.drawables.logo),
-        contentDescription = "App Logo",
+        contentDescription = stringResource(Res.string.cd_app_logo),
         modifier = modifier.dropShadow(
             shape = RectangleShape, shadow = Shadow(
                 radius = 10.dp,

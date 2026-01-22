@@ -29,7 +29,16 @@ import dev.ktekik.signin.GoogleButton
 import dev.ktekik.utils.LocalResources
 import dev.ktekik.utils.ResourcesImpl
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import sahaf.composeapp.generated.resources.Res
+import sahaf.composeapp.generated.resources.cd_book_image
+import sahaf.composeapp.generated.resources.dismiss
+import sahaf.composeapp.generated.resources.error_auth_failed
+import sahaf.composeapp.generated.resources.error_cancelled
+import sahaf.composeapp.generated.resources.welcome_subtitle
+import sahaf.composeapp.generated.resources.welcome_tagline
+import sahaf.composeapp.generated.resources.welcome_title
 
 @Composable
 fun WelcomeScreen() {
@@ -53,7 +62,7 @@ fun WelcomeScreen() {
                 LogoWithShadow(Modifier.padding(top = 32.dp))
 
                 Text(
-                    text = "Welcome to Sahaf",
+                    text = stringResource(Res.string.welcome_title),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.headlineLarge,
                     textAlign = TextAlign.Center,
@@ -61,7 +70,7 @@ fun WelcomeScreen() {
                 )
 
                 Text(
-                    text = "A platform to share Turkish books",
+                    text = stringResource(Res.string.welcome_subtitle),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
@@ -77,13 +86,12 @@ fun WelcomeScreen() {
 
                 Image(
                     painter = painterResource(bookDrawable),
-                    contentDescription = "Book image",
+                    contentDescription = stringResource(Res.string.cd_book_image),
                     modifier = Modifier.padding(vertical = 32.dp)
                 )
 
                 Text(
-                    text = "Reserve. Meet. Borrow. Read.\n" +
-                            "List. Ship. Rinse & Repeat.",
+                    text = stringResource(Res.string.welcome_tagline),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold,
@@ -91,6 +99,9 @@ fun WelcomeScreen() {
                 )
             }
 
+
+            val errorAuthFailed = stringResource(Res.string.error_auth_failed)
+            val errorCancelled = stringResource(Res.string.error_cancelled)
 
             GoogleButton(
                 modifier = Modifier.padding(bottom = 64.dp),
@@ -101,11 +112,11 @@ fun WelcomeScreen() {
                     }
 
                     (it as? AuthResponse.Error)?.message?.let { message ->
-                        snackbarMessage = "Error: Authentication Failed"
+                        snackbarMessage = errorAuthFailed
                     }
 
                     (it as? AuthResponse.Cancelled)?.let {
-                        snackbarMessage = "Error: Cancelled"
+                        snackbarMessage = errorCancelled
                     }
                 }
             )
@@ -116,7 +127,7 @@ fun WelcomeScreen() {
                     contentColor = MaterialTheme.colorScheme.onError,
                     action = {
                         TextButton(onClick = { snackbarMessage = "" }) {
-                            Text("Dismiss", color = MaterialTheme.colorScheme.onError)
+                            Text(stringResource(Res.string.dismiss), color = MaterialTheme.colorScheme.onError)
                         }
                     }
                 ) {

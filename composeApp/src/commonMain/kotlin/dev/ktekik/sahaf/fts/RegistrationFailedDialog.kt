@@ -18,7 +18,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.ktekik.sahaf.navigation.NavigationViewModel
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
 import dev.ktekik.utils.composables.ErrorContainer
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import sahaf.composeapp.generated.resources.Res
+import sahaf.composeapp.generated.resources.registration_failed_message
+import sahaf.composeapp.generated.resources.registration_failed_title
 
 @Composable
 fun RegistrationFailedDialog(
@@ -41,8 +45,8 @@ fun RegistrationFailedDialog(
             verticalArrangement = Arrangement.Center
         ) {
             ErrorContainer(
-                title = "Reader Registration Failed",
-                message = "Something went wrong. Please make sure you are connected to internet and try again.",
+                title = stringResource(Res.string.registration_failed_title),
+                message = stringResource(Res.string.registration_failed_message),
                 showTryAgainText = !registrationState.isLoading
             ) {
                 readerRegistryViewModel.registerReader(navState.profile, {

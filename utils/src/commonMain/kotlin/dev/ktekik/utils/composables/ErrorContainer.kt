@@ -23,8 +23,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import sahaf.utils.generated.resources.Res
+import sahaf.utils.generated.resources.cd_error_icon
 import sahaf.utils.generated.resources.ic_error
+import sahaf.utils.generated.resources.try_again
 
 @Composable
 fun ErrorContainer(
@@ -47,7 +50,7 @@ fun ErrorContainer(
     ) {
         Icon(
             painter = painterResource(Res.drawable.ic_error),
-            contentDescription = "Error Icon",
+            contentDescription = stringResource(Res.string.cd_error_icon),
             modifier = Modifier.size(64.dp),
             tint = MaterialTheme.colorScheme.error
         )
@@ -75,7 +78,7 @@ fun ErrorContainer(
             )
         ) {
             if (showTryAgainText) {
-                Text(text = "Try Again")
+                Text(text = stringResource(Res.string.try_again))
             } else {
                 CircularProgressIndicator()
             }

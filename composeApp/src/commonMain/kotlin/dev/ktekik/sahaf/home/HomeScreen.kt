@@ -9,7 +9,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.ktekik.utils.composables.ErrorContainer
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import sahaf.composeapp.generated.resources.Res
+import sahaf.composeapp.generated.resources.error_something_went_wrong
+import sahaf.composeapp.generated.resources.error_try_again_later
 
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel = koinInject()) {
@@ -33,8 +37,8 @@ private fun HomeLoadingScreen() {
 private fun HomeErrorScreen(homeViewModel: HomeViewModel = koinInject()) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         ErrorContainer(
-            title = "Something went wrong!",
-            message = "Please try again later.",
+            title = stringResource(Res.string.error_something_went_wrong),
+            message = stringResource(Res.string.error_try_again_later),
             onTryAgainClicked = {
                 homeViewModel.fetchReader()
             }

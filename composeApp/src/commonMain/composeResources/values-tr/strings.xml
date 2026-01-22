@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Sahaf</string>
+    
+    <!-- Content Descriptions -->
+    <string name="cd_sahaf_logo">Sahaf Logosu</string>
+    <string name="cd_user_profile_picture">Kullanıcı Profil Fotoğrafı</string>
+    <string name="cd_book_cover">Kitap Kapağı</string>
+    <string name="cd_app_logo">Uygulama Logosu</string>
+    <string name="cd_book_image">Kitap görseli</string>
+    <string name="cd_person_icon">Kişi Ikonu</string>
+    <string name="cd_loading">Yükleniyor</string>
+    <string name="cd_error_icon">Hata Ikonu</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">Ana Sayfa</string>
+    <string name="nav_notification">Bildirimler</string>
+    <string name="nav_scan">Tara</string>
+    <string name="nav_book_store">Kitaplık</string>
+    
+    <!-- Delivery Methods -->
+    <string name="delivery_local_pickup">Elden teslim</string>
+    <string name="delivery_shipping">Kargo</string>
+    <string name="delivery_local_pickup_and_shipping">Elden teslim &amp; Kargo</string>
+    
+    <!-- Book Listing -->
+    <string name="last_updated">Son güncelleme: %1$s</string>
+    <string name="unknown_author">Bilinmiyor</string>
+    <string name="book_details">Kitap Detayları</string>
+    <string name="back">Geri</string>
+    <string name="book_information">Kitap Bilgileri</string>
+    <string name="label_isbn">ISBN</string>
+    <string name="label_pages">Sayfa</string>
+    <string name="label_published">Yayın Tarihi</string>
+    <string name="label_publishers">Yayınevi</string>
+    <string name="label_subjects">Konular</string>
+    <string name="label_description">Açıklama</string>
+    <string name="by_author">%1$s</string>
+    <string name="failed_to_load_book">Kitap yüklenemedi</string>
+    
+    <!-- Welcome Screen -->
+    <string name="welcome_title">Sahaf\'a Hoş Geldiniz</string>
+    <string name="welcome_subtitle">Türkçe kitap paylaşım platformu</string>
+    <string name="welcome_tagline">Rezerve et. Buluş. Ödünç al. Oku.\nListele. Gönder. Tekrarla.</string>
+    <string name="error_auth_failed">Hata: Kimlik doğrulama başarısız</string>
+    <string name="error_cancelled">Hata: İptal edildi</string>
+    <string name="dismiss">Kapat</string>
+    
+    <!-- Get Started Screen -->
+    <string name="get_started">Başla</string>
+    
+    <!-- Zipcode Entry Screen -->
+    <string name="enter_zipcode">Posta Kodunu Girin</string>
+    <string name="zipcode_instruction">Yakınınızdaki kitapları görmek için posta kodunuzu girin:</string>
+    
+    <!-- Registration Dialogs -->
+    <string name="sign_in_successful">Giriş Başarılı!</string>
+    <string name="account_creating_message">Hesabınız oluşturuluyor. Lütfen bekleyin, sizin için hazırlık yapıyoruz.</string>
+    <string name="registration_failed_title">Okuyucu Kaydı Başarısız</string>
+    <string name="registration_failed_message">Bir sorun oluştu. Lütfen internet bağlantınızı kontrol edip tekrar deneyin.</string>
+    
+    <!-- Errors -->
+    <string name="error_something_went_wrong">Bir şeyler yanlış gitti!</string>
+    <string name="error_try_again_later">Lütfen daha sonra tekrar deneyin.</string>
+    <string name="try_again">Tekrar Dene</string>
+    
+    <!-- Time Strings -->
+    <string name="time_just_now">Şimdi</string>
+    <string name="time_minute_ago">1 dakika önce</string>
+    <string name="time_minutes_ago">%1$d dakika önce</string>
+    <string name="time_today_at">Bugün %1$s</string>
+    <string name="time_yesterday_at">Dün %1$s</string>
+    <string name="time_on_date">%1$s tarihinde</string>
+    <string name="time_am">ÖÖ</string>
+    <string name="time_pm">ÖS</string>
+</resources>

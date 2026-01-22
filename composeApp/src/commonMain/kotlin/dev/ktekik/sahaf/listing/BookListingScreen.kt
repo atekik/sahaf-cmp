@@ -39,7 +39,21 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import dev.ktekik.sahaf.models.Book
 import dev.ktekik.utils.composables.ErrorContainer
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import sahaf.composeapp.generated.resources.Res
+import sahaf.composeapp.generated.resources.back
+import sahaf.composeapp.generated.resources.book_details
+import sahaf.composeapp.generated.resources.book_information
+import sahaf.composeapp.generated.resources.by_author
+import sahaf.composeapp.generated.resources.cd_book_cover
+import sahaf.composeapp.generated.resources.failed_to_load_book
+import sahaf.composeapp.generated.resources.label_description
+import sahaf.composeapp.generated.resources.label_isbn
+import sahaf.composeapp.generated.resources.label_pages
+import sahaf.composeapp.generated.resources.label_published
+import sahaf.composeapp.generated.resources.label_publishers
+import sahaf.composeapp.generated.resources.label_subjects
 
 @Composable
 fun BookListingScreen(
@@ -86,7 +100,7 @@ private fun BookListingErrorScreen(
         contentAlignment = Alignment.Center
     ) {
         ErrorContainer(
-            title = "Failed to load book",
+            title = stringResource(Res.string.failed_to_load_book),
             message = message,
             onTryAgainClicked = onRetry
         )
@@ -104,14 +118,14 @@ private fun BookListingReadyScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Book Details",
+                        text = stringResource(Res.string.book_details),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold
                     )
                 },
                 navigationIcon = {
                     Text(
-                        text = "Back",
+                        text = stringResource(Res.string.back),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Medium,
@@ -173,7 +187,7 @@ private fun BookCoverSection(book: Book) {
                 if (book.cover?.medium != null) {
                     AsyncImage(
                         model = book.cover.medium,
-                        contentDescription = "Book Cover",
+                        contentDescription = stringResource(Res.string.cd_book_cover),
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
@@ -202,7 +216,7 @@ private fun BookCoverSection(book: Book) {
 
                 if (book.authors.isNotEmpty()) {
                     Text(
-                        text = "by ${book.authors.joinToString(", ")}",
+                        text = stringResource(Res.string.by_author, book.authors.joinToString(", ")),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 2,
@@ -223,7 +237,7 @@ private fun BookInfoSection(book: Book) {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "Book Information",
+            text = stringResource(Res.string.book_information),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onBackground,
@@ -232,28 +246,28 @@ private fun BookInfoSection(book: Book) {
 
         // ISBN
         book.isbn?.let { isbn ->
-            InfoRow(label = "ISBN", value = isbn)
+            InfoRow(label = stringResource(Res.string.label_isbn), value = isbn)
         }
 
         // Page Count
         book.pageCount?.let { pages ->
-            InfoRow(label = "Pages", value = pages.toString())
+            InfoRow(label = stringResource(Res.string.label_pages), value = pages.toString())
         }
 
         // Published Date
-        InfoRow(label = "Published", value = book.publishedDate)
+        InfoRow(label = stringResource(Res.string.label_published), value = book.publishedDate)
 
         // Publishers
         book.publishers?.let { publishers ->
             if (publishers.isNotEmpty()) {
-                InfoRow(label = "Publishers", value = publishers.joinToString(", "))
+                InfoRow(label = stringResource(Res.string.label_publishers), value = publishers.joinToString(", "))
             }
         }
 
         // Subjects
         book.subjects?.let { subjects ->
             if (subjects.isNotEmpty()) {
-                InfoRow(label = "Subjects", value = subjects.joinToString(", "))
+                InfoRow(label = stringResource(Res.string.label_subjects), value = subjects.joinToString(", "))
             }
         }
 
@@ -261,7 +275,7 @@ private fun BookInfoSection(book: Book) {
         book.snippets?.firstOrNull()?.let { snippet ->
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Description",
+                text = stringResource(Res.string.label_description),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onBackground
