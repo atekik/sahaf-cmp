@@ -1,11 +1,12 @@
 package dev.ktekik.sahaf.utils
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.abs
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 /**
  * Returns a human-readable relative time string based on the given instant.
@@ -30,14 +31,14 @@ fun getRelativeTimeString(
     val nowDateTime = now.toLocalDateTime(timeZone)
 
     val instantDate =
-        LocalDate(instantDateTime.year, instantDateTime.monthNumber, instantDateTime.dayOfMonth)
-    val nowDate = LocalDate(nowDateTime.year, nowDateTime.monthNumber, nowDateTime.dayOfMonth)
+        LocalDate(instantDateTime.year, instantDateTime.month.number, instantDateTime.day)
+    val nowDate = LocalDate(nowDateTime.year, nowDateTime.month.number, nowDateTime.day)
 
     // Calculate the number of midnights between the two dates
     val midnightsPassed = countMidnightsBetween(instantDate, nowDate)
 
     return when (midnightsPassed) {
-        0 -> {
+        0L -> {
             if (isWithinAnHour(instant, now)) {
                 val minutesAgo =
                     ((now.toEpochMilliseconds() - instant.toEpochMilliseconds()) / 60_000).toInt()
@@ -54,7 +55,7 @@ fun getRelativeTimeString(
         }
 
         // Yesterday (1 midnight passed)
-        1 -> {
+        1L -> {
             val hour = instantDateTime.hour
             val minute = instantDateTime.minute
             "Yesterday at ${formatTime(hour, minute)}"
@@ -62,8 +63,8 @@ fun getRelativeTimeString(
 
         // More than 2 midnights ago
         else -> {
-            val month = instantDateTime.monthNumber
-            val day = instantDateTime.dayOfMonth
+            val month = instantDateTime.month.number
+            val day = instantDateTime.day
             "on ${formatDate(month, day)}"
         }
     }
@@ -81,7 +82,7 @@ private fun isWithinAnHour(instant1: Instant, instant2: Instant): Boolean {
  * Counts the number of midnights between two dates
  * Returns 0 if same day, 1 if next day, 2 if day after, etc.
  */
-private fun countMidnightsBetween(date1: LocalDate, date2: LocalDate): Int {
+private fun countMidnightsBetween(date1: LocalDate, date2: LocalDate): Long {
     // Get the number of days between dates
     val epochDay1 = date1.toEpochDays()
     val epochDay2 = date2.toEpochDays()

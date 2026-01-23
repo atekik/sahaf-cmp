@@ -279,9 +279,9 @@ class BookApiTest {
             awaitComplete()
         }
 
-        assertTrue(capturedUrl?.contains("readerId=reader-123") == true)
-        assertTrue(capturedUrl?.contains("excludeSelf=true") == true)
-        assertTrue(capturedUrl?.contains("limit=10") == true)
+        assertEquals(capturedUrl?.contains("readerId=reader-123"), true)
+        assertEquals(capturedUrl?.contains("excludeSelf=true"), true)
+        assertEquals(capturedUrl?.contains("limit=10"), true)
     }
 
     @Test
