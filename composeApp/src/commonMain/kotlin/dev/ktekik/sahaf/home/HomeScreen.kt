@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +19,10 @@ import sahaf.composeapp.generated.resources.error_try_again_later
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel = koinInject()) {
     val state: HomeScreenState by homeViewModel.container.stateFlow.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        homeViewModel.fetchReader()
+    }
 
     when (val currentState = state) {
         is HomeScreenState.LoadingState -> HomeLoadingScreen()

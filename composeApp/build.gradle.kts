@@ -76,6 +76,12 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.turbine)
+            implementation(libs.orbit.test)
+            implementation(libs.ktor.client.mock)
+            implementation(libs.ktor.client.contentnegotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
         }
     }
 }

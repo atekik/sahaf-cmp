@@ -35,10 +35,6 @@ class HomeViewModel(
     override val container: Container<HomeScreenState, NavigationSideEffect> =
         container(LoadingState)
 
-    init {
-        fetchReader()
-    }
-
     @OptIn(ExperimentalCoroutinesApi::class)
     fun fetchReader() {
         intent {

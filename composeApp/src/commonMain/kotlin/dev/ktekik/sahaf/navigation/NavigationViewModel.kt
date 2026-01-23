@@ -9,22 +9,10 @@ import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 
-class NavigationViewModel(fetchReaderIdUseCase: FetchReaderIdUseCase) : ViewModel(),
+class NavigationViewModel(private val fetchReaderIdUseCase: FetchReaderIdUseCase) : ViewModel(),
     ContainerHost<NavigationState, NavigationSideEffect> {
     override val container: Container<NavigationState, NavigationSideEffect> =
         container(NavigationState())
-
-    init {
-        viewModelScope.launch {
-            fetchReaderIdUseCase.execute(Unit).collect {
-                if (it == null) {
-                    navigateToGetStarted()
-                } else {
-                    navigateHome()
-                }
-            }
-        }
-    }
 
     fun navigateToGetStarted() {
         intent {
@@ -107,6 +95,18 @@ class NavigationViewModel(fetchReaderIdUseCase: FetchReaderIdUseCase) : ViewMode
                     }
                 )
             )
+        }
+    }
+
+    fun determineNextScreen() {
+        viewModelScope.launch {
+            fetchReaderIdUseCase.execute(Unit).collect {
+                if (it == null) {
+                    navigateToGetStarted()
+                } else {
+                    navigateHome()
+                }
+            }
         }
     }
 }

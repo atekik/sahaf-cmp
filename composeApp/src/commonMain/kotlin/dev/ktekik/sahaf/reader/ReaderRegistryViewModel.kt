@@ -6,9 +6,9 @@ import dev.ktekik.sahaf.models.toReader
 import dev.ktekik.sahaf.usecases.PostReaderUseCase
 import dev.ktekik.sahaf.usecases.SaveReaderIdUseCase
 import dev.ktekik.signin.models.Profile
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
@@ -23,7 +23,8 @@ data class ReaderRegistryState(
 
 class ReaderRegistryViewModel(
     private val postReaderUseCase: PostReaderUseCase,
-    private val saveReaderIdUseCase: SaveReaderIdUseCase
+    private val saveReaderIdUseCase: SaveReaderIdUseCase,
+    private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main,
 ) : ContainerHost<ReaderRegistryState, Unit>, ViewModel() {
     override val container: Container<ReaderRegistryState, Unit> = container(ReaderRegistryState())
 
@@ -38,11 +39,9 @@ class ReaderRegistryViewModel(
             val reader = profile?.toReader() ?: throw IllegalStateException("Profile is null")
             withContext(Dispatchers.IO) {
                 postReaderUseCase.execute(reader).collect {
-                    // ToDo remove this delay
-                    delay(2000)
                     reduce { state.copy(isLoading = false, reader = it.reader, error = it.error) }
 
-                    withContext(Dispatchers.Main) {
+                    withContext(mainDispatcher) {
                         it.reader?.let { reader ->
                             onSuccess.invoke(reader)
 

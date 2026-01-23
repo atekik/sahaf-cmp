@@ -6,6 +6,7 @@ import dev.ktekik.sahaf.models.Book
 import dev.ktekik.sahaf.navigation.NavigationSideEffect
 import dev.ktekik.sahaf.usecases.IsbnQueryResult
 import dev.ktekik.sahaf.usecases.IsbnQueryUseCase
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
@@ -20,14 +21,15 @@ sealed interface BookListingScreenState {
 }
 
 class BookListingViewModel(
-    private val isbnQueryUseCase: IsbnQueryUseCase
+    private val isbnQueryUseCase: IsbnQueryUseCase,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel(), ContainerHost<BookListingScreenState, NavigationSideEffect> {
 
     override val container: Container<BookListingScreenState, NavigationSideEffect> =
         container(BookListingScreenState.Loading)
 
     fun fetchBook(isbn: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             isbnQueryUseCase.execute(isbn).collect { result ->
                 intent {
                     reduce {

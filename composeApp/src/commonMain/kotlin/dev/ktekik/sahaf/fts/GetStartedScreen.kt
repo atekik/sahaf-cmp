@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
@@ -36,7 +37,11 @@ import sahaf.composeapp.generated.resources.Res
 import sahaf.composeapp.generated.resources.cd_app_logo
 import sahaf.composeapp.generated.resources.get_started
 
-@Composable fun SplashScreen() {
+@Composable fun SplashScreen(navigationViewModel: NavigationViewModel = koinInject()) {
+    LaunchedEffect(Unit) {
+        navigationViewModel.determineNextScreen()
+    }
+
     CompositionLocalProvider(LocalResources provides ResourcesImpl()) {
         Box(
             modifier = Modifier
