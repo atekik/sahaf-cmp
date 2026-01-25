@@ -29,6 +29,7 @@ class BookListingViewModel(
         container(BookListingScreenState.Loading)
 
     fun fetchBook(isbn: String) {
+        println("Fetching book for ISBN: $isbn")
         viewModelScope.launch(dispatcher) {
             isbnQueryUseCase.execute(isbn).collect { result ->
                 intent {

@@ -90,9 +90,8 @@ class NavigationViewModel(private val fetchReaderIdUseCase: FetchReaderIdUseCase
         intent {
             postSideEffect(
                 NavigationSideEffect.NavigateTo(
-                    destination = NavigationDestination.PostFTS.BookListing.apply {
-                        createRoute(isbn)
-                    }
+                    destination = NavigationDestination.PostFTS.BookListing,
+                    route = NavigationDestination.PostFTS.BookListing.createRoute(isbn)
                 )
             )
         }

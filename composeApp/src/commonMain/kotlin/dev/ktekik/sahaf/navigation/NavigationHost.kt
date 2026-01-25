@@ -11,7 +11,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import kotlinx.serialization.Serializable
 import dev.ktekik.sahaf.fts.GetStartedScreen
 import dev.ktekik.sahaf.fts.RegistrationFailedDialog
 import dev.ktekik.sahaf.fts.RegistrationPendingDialog
@@ -21,6 +20,7 @@ import dev.ktekik.sahaf.fts.WelcomeScreen
 import dev.ktekik.sahaf.home.HomeScreen
 import dev.ktekik.sahaf.listing.BookListingScreen
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
+import kotlinx.serialization.Serializable
 import org.koin.compose.koinInject
 
 sealed class RegionCode(val code: String) {
@@ -111,7 +111,7 @@ fun RouteObserver(navController: NavController) {
 private fun handleNavigationSideEffect(navController: NavController, sideEffect: NavigationSideEffect) {
     when (sideEffect) {
         is NavigationSideEffect.NavigateTo -> {
-            navController.navigate(route = sideEffect.destination.route) {
+            navController.navigate(route = sideEffect.route) {
                 if (sideEffect.popUpTo) {
                     popUpTo(navController.graph.id) {
                         inclusive = sideEffect.popUpToInclusive

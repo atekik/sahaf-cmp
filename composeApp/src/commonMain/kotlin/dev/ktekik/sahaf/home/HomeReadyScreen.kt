@@ -27,13 +27,10 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,9 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
-import kotlinx.coroutines.flow.filterIsInstance
 import dev.ktekik.barcodescanner.CameraPreview
 import dev.ktekik.sahaf.models.DeliveryMethod
 import dev.ktekik.sahaf.navigation.NavigationViewModel
@@ -139,6 +134,7 @@ internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState, navigatio
                                 coverColor = Color(rainbowArray[index % rainbowArray.size]),
                                 coverUrl = listing.book.cover?.medium ?: listing.book.cover?.small,
                                 viewCount = listing.viewCount,
+                                publisher = listing.book.publishers?.firstOrNull() ?: "",
                                 deliveryMethod = when (listing.deliveryMethod) {
                                     DeliveryMethod.LocalPickup -> deliveryLocalPickup
                                     DeliveryMethod.Shipping -> deliveryShipping
@@ -200,7 +196,6 @@ private fun BookCard(
     // Create painter for the book cover
     val painter = rememberAsyncImagePainter(model = book.coverUrl)
 
-
     Card(
         modifier = modifier.fillMaxWidth().padding(horizontal = 8.dp),
         shape = MaterialTheme.shapes.medium,
@@ -257,7 +252,7 @@ private fun BookCard(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = book.description,
+                    text = book.publisher,
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2,
@@ -407,5 +402,6 @@ private data class BookCardData(
     val coverUrl: String? = null,
     val viewCount: Int = 0,
     val deliveryMethod: String = "Local pick up & Shipping",
+    val publisher: String = "",
     val lastUpdate: String = "10 mins ago"
 )
