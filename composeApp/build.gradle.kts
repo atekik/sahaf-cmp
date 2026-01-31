@@ -55,6 +55,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.compose.navigation)
+            implementation(libs.navigationevent.compose)
             implementation(project(":utils"))
             implementation(project(":signin"))
             implementation(project(":barcodeScanner"))

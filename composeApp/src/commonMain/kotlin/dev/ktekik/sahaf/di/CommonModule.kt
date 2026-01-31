@@ -4,14 +4,17 @@ import dev.ktekik.sahaf.cloud.BookApi
 import dev.ktekik.sahaf.cloud.ReaderApi
 import dev.ktekik.sahaf.cloud.bookApiBuilder
 import dev.ktekik.sahaf.cloud.readerApiBuilder
-import dev.ktekik.sahaf.datastore.ReaderIdRepository
+import dev.ktekik.sahaf.datastore.ReaderRepository
 import dev.ktekik.sahaf.getBaseUrl
 import dev.ktekik.sahaf.home.HomeViewModel
-import dev.ktekik.sahaf.listing.BookListingViewModel
+import dev.ktekik.sahaf.listing.CreateBookListingViewModel
+import dev.ktekik.sahaf.listing.IsbnQueryViewModel
 import dev.ktekik.sahaf.navigation.NavigationViewModel
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
 import dev.ktekik.sahaf.usecases.FetchListingsWithShippingUseCase
 import dev.ktekik.sahaf.usecases.FetchReaderIdUseCase
+import dev.ktekik.sahaf.usecases.FetchReaderIdZipcodePairUseCase
+import dev.ktekik.sahaf.usecases.CreateBookListingUseCase
 import dev.ktekik.sahaf.usecases.IsbnQueryUseCase
 import dev.ktekik.sahaf.usecases.PostReaderUseCase
 import dev.ktekik.sahaf.usecases.QueryReaderUseCase
@@ -52,15 +55,19 @@ val commonModule = module {
 
     factory { QueryReaderUseCase(readerApi = get()) }
 
-    single { ReaderIdRepository(get()) }
+    single { ReaderRepository(get()) }
 
     factory { FetchReaderIdUseCase(get()) }
 
-    factory { SaveReaderIdUseCase(readerIdRepository = get()) }
+    factory { FetchReaderIdZipcodePairUseCase(get()) }
+
+    factory { SaveReaderIdUseCase(readerRepository = get()) }
 
     factory { FetchListingsWithShippingUseCase(bookApi = get(), readerApi = get()) }
 
     factory { IsbnQueryUseCase(bookApi = get()) }
+
+    factory { CreateBookListingUseCase(bookApi = get()) }
 
     single { NavigationViewModel(get()) }
 
@@ -68,7 +75,9 @@ val commonModule = module {
 
     factory { ReaderRegistryViewModel(postReaderUseCase = get(), saveReaderIdUseCase = get()) }
 
-    factory { BookListingViewModel(isbnQueryUseCase = get()) }
+    factory { IsbnQueryViewModel(isbnQueryUseCase = get()) }
+
+    single { CreateBookListingViewModel(createBookListingUseCase = get(), fetchReaderIdZipcodePairUseCase = get()) }
 }
 
 fun initKoin(config: KoinAppDeclaration = {}) {

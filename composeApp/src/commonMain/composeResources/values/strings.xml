@@ -38,7 +38,9 @@
     <string name="label_description">Description</string>
     <string name="by_author">by %1$s</string>
     <string name="failed_to_load_book">Failed to load book</string>
-    
+    <string name="listing_delivery_method">Delivery Method</string>
+    <string name="book_listing_button_looks_good">Looks Good!</string>
+
     <!-- Welcome Screen -->
     <string name="welcome_title">Welcome to Sahaf</string>
     <string name="welcome_subtitle">A platform to share Turkish books</string>

@@ -1,7 +1,7 @@
 package dev.ktekik.sahaf.models
 
-import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -14,11 +14,11 @@ data class BookListing(
     val createdAt: Instant? = null,
     val updatedAt: Instant? = null,
     val deliveryMethod: DeliveryMethod = DeliveryMethod.LocalPickup,
-    val likes: Set<String>,
+    val likes: Set<String> = emptySet(),
     val viewCount: Int = 0,
     @Serializable(with = UuidSerializer::class)
-    val listingUuid: Uuid?,
-    val readersContacted: Set<String>,
+    val listingUuid: Uuid? = null,
+    val readersContacted: Set<String> = emptySet(),
     val zipcode: String,
 )
 

@@ -2,7 +2,8 @@ package dev.ktekik.sahaf.reader
 
 import dev.ktekik.sahaf.cloud.ApiResult
 import dev.ktekik.sahaf.cloud.ReaderApi
-import dev.ktekik.sahaf.datastore.ReaderIdRepository
+import dev.ktekik.sahaf.datastore.ReaderIdZipcodePair
+import dev.ktekik.sahaf.datastore.ReaderRepository
 import dev.ktekik.sahaf.models.Reader
 import dev.ktekik.sahaf.usecases.PostReaderUseCase
 import dev.ktekik.sahaf.usecases.SaveReaderIdUseCase
@@ -130,11 +131,11 @@ class ReaderRegistryViewModelTest {
 
     @Test
     fun `registerReader should save reader ID on success`() = runTest {
-        var savedReaderId: String? = null
+        var savedPair: ReaderIdZipcodePair? = null
 
         val viewModel = createViewModel(
             postResult = ApiResult.Success(testReader),
-            saveCalled = { savedReaderId = it }
+            saveCalled = { savedPair = it }
         )
 
         viewModel.test(this) {
@@ -146,7 +147,7 @@ class ReaderRegistryViewModelTest {
             awaitState() // isLoading = false, reader populated
         }
 
-        assertEquals(testReaderId.toString(), savedReaderId)
+        assertEquals(testReaderId.toString(), savedPair?.id)
     }
 
     @Test
@@ -251,10 +252,10 @@ class ReaderRegistryViewModelTest {
 
     private fun createViewModel(
         postResult: ApiResult<Reader>,
-        saveCalled: (String) -> Unit
+        saveCalled: (ReaderIdZipcodePair) -> Unit
     ): ReaderRegistryViewModel {
         val fakeReaderApi = FakeReaderApi(postResult)
-        val fakeReaderIdRepository = FakeReaderIdRepository(saveCalled)
+        val fakeReaderIdRepository = FakeReaderRepository(saveCalled)
 
         return ReaderRegistryViewModel(
             postReaderUseCase = PostReaderUseCase(fakeReaderApi),
@@ -273,12 +274,12 @@ private class FakeReaderApi(
         flowOf(ApiResult.Error("Not implemented"))
 }
 
-private class FakeReaderIdRepository(
-    private val onSave: (String) -> Unit
-) : ReaderIdRepository(FakeDataStore()) {
+private class FakeReaderRepository(
+    private val onSave: (ReaderIdZipcodePair) -> Unit
+) : ReaderRepository(FakeDataStore()) {
     override val readerId: Flow<String?> = flowOf(null)
-    override suspend fun saveId(id: String) {
-        onSave(id)
+    override suspend fun savePair(pair: ReaderIdZipcodePair) {
+        onSave(pair)
     }
 }
 

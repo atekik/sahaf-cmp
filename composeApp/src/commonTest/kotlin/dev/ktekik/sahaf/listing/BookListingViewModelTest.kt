@@ -3,6 +3,7 @@ package dev.ktekik.sahaf.listing
 import dev.ktekik.sahaf.cloud.ApiResult
 import dev.ktekik.sahaf.cloud.BookApi
 import dev.ktekik.sahaf.models.Book
+import dev.ktekik.sahaf.models.BookListing
 import dev.ktekik.sahaf.models.Cover
 import dev.ktekik.sahaf.models.CursorPagedListings
 import dev.ktekik.sahaf.usecases.IsbnQueryUseCase
@@ -107,9 +108,13 @@ class BookListingViewModelTest {
                 capturedIsbn = isbn
                 return flowOf(ApiResult.Success(testBook))
             }
+
+            override suspend fun createListing(bookListing: BookListing): Flow<ApiResult<BookListing>> {
+                TODO("Not yet implemented")
+            }
         }
 
-        val viewModel = BookListingViewModel(
+        val viewModel = IsbnQueryViewModel(
             isbnQueryUseCase = IsbnQueryUseCase(fakeBookApi)
         )
 
@@ -180,9 +185,13 @@ class BookListingViewModelTest {
                 callCount++
                 return flowOf(ApiResult.Success(if (callCount == 1) firstBook else secondBook))
             }
+
+            override suspend fun createListing(bookListing: BookListing): Flow<ApiResult<BookListing>> {
+                TODO("Not yet implemented")
+            }
         }
 
-        val viewModel = BookListingViewModel(
+        val viewModel = IsbnQueryViewModel(
             isbnQueryUseCase = IsbnQueryUseCase(fakeBookApi)
         )
 
@@ -200,9 +209,9 @@ class BookListingViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun createViewModel(
         bookResult: ApiResult<Book>
-    ): BookListingViewModel {
+    ): IsbnQueryViewModel {
         val fakeBookApi = FakeBookApi(bookResult)
-        return BookListingViewModel(
+        return IsbnQueryViewModel(
             isbnQueryUseCase = IsbnQueryUseCase(fakeBookApi),
             dispatcher = UnconfinedTestDispatcher()
         )
@@ -221,4 +230,8 @@ private class FakeBookApi(
     ): Flow<ApiResult<CursorPagedListings>> = flowOf(ApiResult.Error("Not implemented"))
 
     override suspend fun queryByIsbn(isbn: String): Flow<ApiResult<Book>> = flowOf(bookResult)
+
+    override suspend fun createListing(bookListing: BookListing): Flow<ApiResult<BookListing>> {
+        TODO("Not yet implemented")
+    }
 }

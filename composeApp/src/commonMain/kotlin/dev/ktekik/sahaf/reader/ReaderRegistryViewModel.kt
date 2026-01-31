@@ -1,6 +1,7 @@
 package dev.ktekik.sahaf.reader
 
 import androidx.lifecycle.ViewModel
+import dev.ktekik.sahaf.datastore.ReaderIdZipcodePair
 import dev.ktekik.sahaf.models.Reader
 import dev.ktekik.sahaf.models.toReader
 import dev.ktekik.sahaf.usecases.PostReaderUseCase
@@ -46,7 +47,12 @@ class ReaderRegistryViewModel(
                             onSuccess.invoke(reader)
 
                             reader.readerId?.let { readerId ->
-                                saveReaderIdUseCase.execute(readerId.toString())
+                                saveReaderIdUseCase.execute(
+                                    ReaderIdZipcodePair(
+                                        readerId.toString(),
+                                            reader.zipcode
+                                    )
+                                )
                             }
                         }
                         it.error?.let {

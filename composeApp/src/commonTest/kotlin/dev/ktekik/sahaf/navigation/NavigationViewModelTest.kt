@@ -1,6 +1,7 @@
 package dev.ktekik.sahaf.navigation
 
-import dev.ktekik.sahaf.datastore.ReaderIdRepository
+import dev.ktekik.sahaf.datastore.ReaderIdZipcodePair
+import dev.ktekik.sahaf.datastore.ReaderRepository
 import dev.ktekik.sahaf.usecases.FetchReaderIdUseCase
 import dev.ktekik.signin.models.Profile
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -171,7 +172,7 @@ class NavigationViewModelTest {
     }
 
     private fun createViewModel(readerIdResult: String?): NavigationViewModel {
-        val navigationFakeReaderIdRepository = NavigationFakeReaderIdRepository(readerIdResult)
+        val navigationFakeReaderIdRepository = NavigationFakeReaderRepository(readerIdResult)
         return NavigationViewModel(
             fetchReaderIdUseCase = FetchReaderIdUseCase(navigationFakeReaderIdRepository)
         )
@@ -179,11 +180,11 @@ class NavigationViewModelTest {
 }
 
 // Test double
-private class NavigationFakeReaderIdRepository(fakeReaderId: String?) : ReaderIdRepository(
+private class NavigationFakeReaderRepository(fakeReaderId: String?) : ReaderRepository(
     NavigationFakeDateStore()
 ) {
     override val readerId: Flow<String?> = flowOf(fakeReaderId)
-    override suspend fun saveId(id: String) {}
+    override suspend fun savePair(pair: ReaderIdZipcodePair) {}
 }
 
 // Minimal fake DataStore

@@ -20,7 +20,7 @@ sealed interface BookListingScreenState {
     data class Error(val message: String) : BookListingScreenState
 }
 
-class BookListingViewModel(
+class IsbnQueryViewModel(
     private val isbnQueryUseCase: IsbnQueryUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel(), ContainerHost<BookListingScreenState, NavigationSideEffect> {

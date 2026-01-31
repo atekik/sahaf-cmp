@@ -30,13 +30,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.ktekik.sahaf.navigation.NavigationViewModel
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 import sahaf.composeapp.generated.resources.Res
 import sahaf.composeapp.generated.resources.enter_zipcode
 import sahaf.composeapp.generated.resources.zipcode_instruction
 
-@Preview
 @Composable
 fun USZipcodeEntryScreen() {
     val viewModel: NavigationViewModel = koinInject()

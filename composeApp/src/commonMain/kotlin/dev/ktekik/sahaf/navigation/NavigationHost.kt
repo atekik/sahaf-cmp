@@ -19,7 +19,9 @@ import dev.ktekik.sahaf.fts.USZipcodeEntryScreen
 import dev.ktekik.sahaf.fts.WelcomeScreen
 import dev.ktekik.sahaf.home.HomeScreen
 import dev.ktekik.sahaf.listing.BookListingScreen
+import dev.ktekik.sahaf.listing.CreateBookListingViewModel
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
+import kotlinx.coroutines.flow.merge
 import kotlinx.serialization.Serializable
 import org.koin.compose.koinInject
 
@@ -89,7 +91,9 @@ fun FtsNavHost() {
                 val isbn = backStackEntry.toRoute<IsbnRoute>().isbn
                 BookListingScreen(
                     isbn = isbn,
-                    onBackPressed = { navController.popBackStack() }
+                    onBackPressed = {
+                        navController.popBackStack()
+                    }
                 )
             }
         }
@@ -100,15 +104,22 @@ fun FtsNavHost() {
 @Composable
 fun RouteObserver(navController: NavController) {
     val navigationViewModel: NavigationViewModel = koinInject()
+    val createBookListingViewModel: CreateBookListingViewModel = koinInject()
 
     LaunchedEffect(Unit) {
-        navigationViewModel.container.sideEffectFlow.collect { sideEffect ->
+        merge(
+            navigationViewModel.container.sideEffectFlow,
+            createBookListingViewModel.container.sideEffectFlow,
+        ).collect { sideEffect ->
             handleNavigationSideEffect(navController, sideEffect)
         }
     }
 }
 
-private fun handleNavigationSideEffect(navController: NavController, sideEffect: NavigationSideEffect) {
+private fun handleNavigationSideEffect(
+    navController: NavController,
+    sideEffect: NavigationSideEffect
+) {
     when (sideEffect) {
         is NavigationSideEffect.NavigateTo -> {
             navController.navigate(route = sideEffect.route) {

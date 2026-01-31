@@ -38,6 +38,7 @@
     <string name="label_description">Açıklama</string>
     <string name="by_author">%1$s</string>
     <string name="failed_to_load_book">Kitap yüklenemedi</string>
+    <string name="book_listing_button_looks_good">Devam Et</string>
     
     <!-- Welcome Screen -->
     <string name="welcome_title">Sahaf\'a Hoş Geldiniz</string>
