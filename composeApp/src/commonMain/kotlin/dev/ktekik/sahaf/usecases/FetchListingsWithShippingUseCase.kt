@@ -9,7 +9,7 @@ import dev.ktekik.sahaf.models.CursorPagedListings
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 
 data class FetchListingsParams(

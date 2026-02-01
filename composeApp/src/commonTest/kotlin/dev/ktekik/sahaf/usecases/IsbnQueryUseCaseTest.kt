@@ -4,15 +4,16 @@ import app.cash.turbine.test
 import dev.ktekik.sahaf.cloud.ApiResult
 import dev.ktekik.sahaf.cloud.BookApi
 import dev.ktekik.sahaf.models.Book
+import dev.ktekik.sahaf.models.BookListing
 import dev.ktekik.sahaf.models.Cover
 import dev.ktekik.sahaf.models.CursorPagedListings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.time.Instant
 
 class IsbnQueryUseCaseTest {
 
@@ -78,9 +79,14 @@ class IsbnQueryUseCaseTest {
     fun `execute passes correct ISBN to API`() = runTest {
         var capturedIsbn: String? = null
         val fakeBookApi = object : BookApi {
+
             override suspend fun queryByIsbn(isbn: String): Flow<ApiResult<Book>> {
                 capturedIsbn = isbn
                 return flowOf(ApiResult.Success(testBook))
+            }
+
+            override suspend fun createListing(bookListing: BookListing): Flow<ApiResult<BookListing>> {
+                TODO("Not yet implemented")
             }
 
             override suspend fun getListingsWithShipping(
@@ -148,6 +154,9 @@ private class QueryIsbnApi(
     private val queryResult: ApiResult<Book>
 ) : BookApi {
     override suspend fun queryByIsbn(isbn: String): Flow<ApiResult<Book>> = flowOf(queryResult)
+    override suspend fun createListing(bookListing: BookListing): Flow<ApiResult<BookListing>> {
+        TODO("Not yet implemented")
+    }
 
     override suspend fun getListingsWithShipping(
         readerId: String,

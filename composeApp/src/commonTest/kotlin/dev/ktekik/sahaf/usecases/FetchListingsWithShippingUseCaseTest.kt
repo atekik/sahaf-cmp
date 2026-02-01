@@ -6,15 +6,16 @@ import dev.ktekik.sahaf.cloud.BookApi
 import dev.ktekik.sahaf.cloud.ReaderApi
 import dev.ktekik.sahaf.home.HomeScreenState
 import dev.ktekik.sahaf.models.Book
+import dev.ktekik.sahaf.models.BookListing
 import dev.ktekik.sahaf.models.CursorPagedListings
 import dev.ktekik.sahaf.models.Reader
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -162,6 +163,10 @@ class FetchListingsWithShippingUseCaseTest {
 
             override suspend fun queryByIsbn(isbn: String): Flow<ApiResult<Book>> =
                 flowOf(ApiResult.Error("Not implemented"))
+
+            override suspend fun createListing(bookListing: BookListing): Flow<ApiResult<BookListing>> {
+                TODO("Not yet implemented")
+            }
         }
 
         val fakeQueryReaderApi = FakeQueryReaderApi(queryResult = ApiResult.Success(testReader))
@@ -232,6 +237,10 @@ class FetchListingsWithShippingUseCaseTest {
 
             override suspend fun queryByIsbn(isbn: String): Flow<ApiResult<Book>> =
                 flowOf(ApiResult.Error("Not implemented"))
+
+            override suspend fun createListing(bookListing: BookListing): Flow<ApiResult<BookListing>> {
+                TODO("Not yet implemented")
+            }
         }
 
         val fakeQueryReaderApi = FakeQueryReaderApi(queryResult = ApiResult.Success(testReader))
@@ -283,6 +292,10 @@ private class FetchListingsWithShippingApi(
 
     override suspend fun queryByIsbn(isbn: String): Flow<ApiResult<Book>> =
         flowOf(ApiResult.Error("Not implemented"))
+
+    override suspend fun createListing(bookListing: BookListing): Flow<ApiResult<BookListing>> {
+        TODO("Not yet implemented")
+    }
 }
 
 private class FakeQueryReaderApi(

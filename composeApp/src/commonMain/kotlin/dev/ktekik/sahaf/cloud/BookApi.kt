@@ -15,7 +15,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 interface BookApi {
     suspend fun getListingsWithShipping(
