@@ -29,6 +29,14 @@ enum class DeliveryMethod {
     LocalPickupAndShipping,
 }
 
+internal fun DeliveryMethod.toPairMap(): MutableMap<DeliveryMethod, Boolean> {
+    return when(this) {
+        DeliveryMethod.LocalPickup -> mutableMapOf(DeliveryMethod.LocalPickup to true, DeliveryMethod.Shipping to false)
+        DeliveryMethod.Shipping -> mutableMapOf(DeliveryMethod.Shipping to true, DeliveryMethod.LocalPickup to false)
+        DeliveryMethod.LocalPickupAndShipping -> mutableMapOf(DeliveryMethod.LocalPickup to true, DeliveryMethod.Shipping to true)
+    }
+}
+
 @Serializable
 data class CursorPagedListings(
     val items: List<BookListing> = emptyList(),

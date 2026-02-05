@@ -19,7 +19,8 @@ import dev.ktekik.sahaf.fts.USZipcodeEntryScreen
 import dev.ktekik.sahaf.fts.WelcomeScreen
 import dev.ktekik.sahaf.home.HomeScreen
 import dev.ktekik.sahaf.listing.BookListingScreen
-import dev.ktekik.sahaf.listing.CreateBookListingViewModel
+import dev.ktekik.sahaf.listing.BookListingViewModel
+import dev.ktekik.sahaf.listing.ListingDetailScreen
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
 import kotlinx.coroutines.flow.merge
 import kotlinx.serialization.Serializable
@@ -34,6 +35,9 @@ sealed class RegionCode(val code: String) {
 
 @Serializable
 data class IsbnRoute(val isbn: String)
+
+@Serializable
+data class ListingRoute(val listingId: String)
 
 @Composable
 fun FtsNavHost() {
@@ -96,6 +100,19 @@ fun FtsNavHost() {
                     }
                 )
             }
+
+            composable(
+                route = NavigationDestination.PostFTS.ListingDetail.homeRoute,
+                arguments = listOf(navArgument("listingId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val listingId = backStackEntry.toRoute<ListingRoute>().listingId
+                ListingDetailScreen(
+                    listingId = listingId,
+                    onBackPressed = {
+                        navController.popBackStack()
+                    }
+                )
+            }
         }
 
     }
@@ -104,12 +121,12 @@ fun FtsNavHost() {
 @Composable
 fun RouteObserver(navController: NavController) {
     val navigationViewModel: NavigationViewModel = koinInject()
-    val createBookListingViewModel: CreateBookListingViewModel = koinInject()
+    val bookListingViewModel: BookListingViewModel = koinInject()
 
     LaunchedEffect(Unit) {
         merge(
             navigationViewModel.container.sideEffectFlow,
-            createBookListingViewModel.container.sideEffectFlow,
+            bookListingViewModel.container.sideEffectFlow,
         ).collect { sideEffect ->
             handleNavigationSideEffect(navController, sideEffect)
         }

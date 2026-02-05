@@ -12,6 +12,10 @@ sealed class NavigationDestination(open val route: String) {
     sealed class PostFTS(val homeRoute: String) : NavigationDestination(homeRoute) {
         data object HomeLanding : PostFTS("home_landing")
 
+        data object ListingDetail : PostFTS("listing_detail/{listingId}") {
+            fun createRoute(listingId: String) = "listing_detail/$listingId"
+        }
+
         data object BookListing : PostFTS("book_listing/{isbn}") {
             fun createRoute(isbn: String) = "book_listing/$isbn"
         }

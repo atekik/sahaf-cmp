@@ -2,6 +2,7 @@ package dev.ktekik.sahaf.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -57,6 +58,7 @@ import sahaf.composeapp.generated.resources.nav_notification
 import sahaf.composeapp.generated.resources.nav_scan
 import sahaf.composeapp.generated.resources.short_logo
 import sahaf.composeapp.generated.resources.unknown_author
+import kotlin.uuid.ExperimentalUuidApi
 
 private val rainbowArray = longArrayOf(
     0xFF372780,
@@ -67,6 +69,7 @@ private val rainbowArray = longArrayOf(
     0xFFB9231F
 )
 
+@OptIn(ExperimentalUuidApi::class)
 @Composable
 internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState, navigationViewModel: NavigationViewModel = koinInject()) {
     var selectedNavItem by remember { mutableIntStateOf(0) }
@@ -80,7 +83,7 @@ internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState, navigatio
         }
     ) { paddingValues ->
         when (selectedNavItem) {
-            2 -> {
+            1 -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -102,7 +105,6 @@ internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState, navigatio
                         .padding(paddingValues)
                 ) {
                     HomeTopBar(
-                        userName = currentState.reader.name,
                         profilePictureUrl = currentState.reader.pictureURL
                     )
 
@@ -122,6 +124,7 @@ internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState, navigatio
                                 author = listing.book.authors.firstOrNull() ?: unknownAuthor,
                                 description = listing.book.snippets?.firstOrNull() ?: "",
                                 coverColor = Color(rainbowArray[index % rainbowArray.size]),
+                                listingId = listing.listingUuid.toString(),
                                 coverUrl = listing.book.cover?.medium ?: listing.book.cover?.small,
                                 viewCount = listing.viewCount,
                                 publisher = listing.book.publishers?.firstOrNull() ?: "",
@@ -133,7 +136,9 @@ internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState, navigatio
                                 lastUpdate = listing.updatedAt?.let { getRelativeTimeString(it) } ?: ""
                             )
                         }) { book ->
-                            BookCard(book = book)
+                            BookCard(book = book, modifier = Modifier.clickable(enabled = true) {
+                                navigationViewModel.onBookClicked(book.listingId)
+                            })
                         }
                     }
                 }
@@ -144,7 +149,6 @@ internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState, navigatio
 
 @Composable
 private fun HomeTopBar(
-    userName: String,
     profilePictureUrl: String?,
     modifier: Modifier = Modifier
 ) {
@@ -219,13 +223,13 @@ private fun HomeBottomNavigationBar(
             onClick = { onItemSelected(1) },
             icon = {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_notification),
-                    contentDescription = stringResource(Res.string.nav_notification)
+                    painter = painterResource(Res.drawable.ic_search),
+                    contentDescription = stringResource(Res.string.nav_scan)
                 )
             },
             label = {
                 Text(
-                    text = stringResource(Res.string.nav_notification),
+                    text = stringResource(Res.string.nav_scan),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -244,13 +248,13 @@ private fun HomeBottomNavigationBar(
             onClick = { onItemSelected(2) },
             icon = {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_search),
-                    contentDescription = stringResource(Res.string.nav_scan)
+                    painter = painterResource(Res.drawable.ic_notification),
+                    contentDescription = stringResource(Res.string.nav_notification)
                 )
             },
             label = {
                 Text(
-                    text = stringResource(Res.string.nav_scan),
+                    text = stringResource(Res.string.nav_notification),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.SemiBold
                 )

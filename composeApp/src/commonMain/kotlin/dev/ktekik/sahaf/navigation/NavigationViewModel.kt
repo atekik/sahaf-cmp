@@ -108,4 +108,15 @@ class NavigationViewModel(private val fetchReaderIdUseCase: FetchReaderIdUseCase
             }
         }
     }
+
+    fun onBookClicked(listingId: String) {
+        intent {
+            postSideEffect(
+                NavigationSideEffect.NavigateTo(
+                    destination = NavigationDestination.PostFTS.ListingDetail,
+                    route = NavigationDestination.PostFTS.ListingDetail.createRoute(listingId)
+                )
+            )
+        }
+    }
 }

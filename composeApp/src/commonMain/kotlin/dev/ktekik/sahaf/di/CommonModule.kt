@@ -7,8 +7,9 @@ import dev.ktekik.sahaf.cloud.readerApiBuilder
 import dev.ktekik.sahaf.datastore.ReaderRepository
 import dev.ktekik.sahaf.getBaseUrl
 import dev.ktekik.sahaf.home.HomeViewModel
-import dev.ktekik.sahaf.listing.CreateBookListingViewModel
+import dev.ktekik.sahaf.listing.BookListingViewModel
 import dev.ktekik.sahaf.listing.IsbnQueryViewModel
+import dev.ktekik.sahaf.listing.ListingDetailViewModel
 import dev.ktekik.sahaf.navigation.NavigationViewModel
 import dev.ktekik.sahaf.reader.ReaderRegistryViewModel
 import dev.ktekik.sahaf.usecases.FetchListingsWithShippingUseCase
@@ -17,6 +18,7 @@ import dev.ktekik.sahaf.usecases.FetchReaderIdZipcodePairUseCase
 import dev.ktekik.sahaf.usecases.CreateBookListingUseCase
 import dev.ktekik.sahaf.usecases.IsbnQueryUseCase
 import dev.ktekik.sahaf.usecases.PostReaderUseCase
+import dev.ktekik.sahaf.usecases.QueryBookListingByIdUseCase
 import dev.ktekik.sahaf.usecases.QueryReaderUseCase
 import dev.ktekik.sahaf.usecases.SaveReaderIdUseCase
 import dev.ktekik.signin.di.initSignInModule
@@ -69,6 +71,8 @@ val commonModule = module {
 
     factory { CreateBookListingUseCase(bookApi = get()) }
 
+    factory { QueryBookListingByIdUseCase(bookApi = get()) }
+
     single { NavigationViewModel(get()) }
 
     single { HomeViewModel(get(), get()) }
@@ -77,7 +81,9 @@ val commonModule = module {
 
     factory { IsbnQueryViewModel(isbnQueryUseCase = get()) }
 
-    single { CreateBookListingViewModel(createBookListingUseCase = get(), fetchReaderIdZipcodePairUseCase = get()) }
+    single { BookListingViewModel(createBookListingUseCase = get(), fetchReaderIdZipcodePairUseCase = get()) }
+
+    factory { ListingDetailViewModel(queryBookListingByIdUseCase = get(), readerIdZipcodePairUseCase = get()) }
 }
 
 fun initKoin(config: KoinAppDeclaration = {}) {

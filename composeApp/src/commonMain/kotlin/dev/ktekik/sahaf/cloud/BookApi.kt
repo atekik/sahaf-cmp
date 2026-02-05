@@ -28,6 +28,8 @@ interface BookApi {
     suspend fun queryByIsbn(isbn: String): Flow<ApiResult<Book>>
 
     suspend fun createListing(bookListing: BookListing): Flow<ApiResult<BookListing>>
+
+    suspend fun queryListingById(listingId: String): Flow<ApiResult<BookListing>>
 }
 
 fun bookApiBuilder(httpClient: HttpClient, baseUrl: String = "http://192.168.68.67:8080"): BookApi =
@@ -92,6 +94,25 @@ private class BookApiImpl(
                 contentType(ContentType.Application.Json)
                 setBody(bookListing)
             }
+
+            if (response.status.isSuccess()) {
+                emit(ApiResult.Success(response.body()))
+            } else {
+                val errorBody = response.bodyAsText()
+                val errorMessage =
+                    "Request failed with status ${response.status}. Server said: $errorBody"
+                println(errorMessage)
+                emit(ApiResult.Error(message = errorMessage))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(ApiResult.Error(message = e.message))
+        }
+    }
+
+    override suspend fun queryListingById(listingId: String): Flow<ApiResult<BookListing>> = flow {
+        try {
+            val response = httpClient.get("$baseUrl/listings/$listingId")
 
             if (response.status.isSuccess()) {
                 emit(ApiResult.Success(response.body()))

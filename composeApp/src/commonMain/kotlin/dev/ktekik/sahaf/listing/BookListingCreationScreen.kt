@@ -49,6 +49,7 @@ import sahaf.composeapp.generated.resources.Res
 import sahaf.composeapp.generated.resources.back
 import sahaf.composeapp.generated.resources.book_details
 import sahaf.composeapp.generated.resources.book_information
+import sahaf.composeapp.generated.resources.book_listing_button_looks_good
 import sahaf.composeapp.generated.resources.by_author
 import sahaf.composeapp.generated.resources.cd_book_cover
 import sahaf.composeapp.generated.resources.delivery_local_pickup
@@ -59,17 +60,15 @@ import sahaf.composeapp.generated.resources.label_pages
 import sahaf.composeapp.generated.resources.label_published
 import sahaf.composeapp.generated.resources.label_publishers
 import sahaf.composeapp.generated.resources.label_subjects
-import sahaf.composeapp.generated.resources.book_listing_button_looks_good
 import sahaf.composeapp.generated.resources.listing_delivery_method
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun BookListingReadyScreen(
+internal fun BookListingCreationScreen(
     book: Book,
     onContinuePressed: (book: Book, MutableMap<DeliveryMethod, Boolean>) -> Unit,
     onBackPressed: () -> Unit,
-    isDeliveryMethodSectionVisible: Boolean = true,
 ) {
     Scaffold(
         topBar = {
@@ -117,19 +116,19 @@ internal fun BookListingReadyScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             val map = remember { mutableMapOf<DeliveryMethod, Boolean>() }
-            var isContinueButtonEnabled by remember { mutableStateOf(!isDeliveryMethodSectionVisible) }
+            var isContinueButtonEnabled by remember { mutableStateOf(false) }
 
-            if (isDeliveryMethodSectionVisible) {
-                DeliveryInformation {
-                    map[it.first] = it.second
-                    isContinueButtonEnabled = map.values.contains(true)
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
+            DeliveryInformation(map) {
+                map[it.first] = it.second
+                isContinueButtonEnabled = map.values.contains(true)
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
 
-            ContinueButton(isContinueButtonEnabled) {
+            SubmitButton(
+                isContinueButtonEnabled,
+                stringResource(Res.string.book_listing_button_looks_good)
+            ) {
                 onContinuePressed(book, map)
             }
         }
@@ -137,7 +136,7 @@ internal fun BookListingReadyScreen(
 }
 
 @Composable
-private fun BookCoverSection(book: Book) {
+internal fun BookCoverSection(book: Book) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -209,7 +208,7 @@ private fun BookCoverSection(book: Book) {
 }
 
 @Composable
-private fun BookInfoSection(book: Book) {
+internal fun BookInfoSection(book: Book) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -284,7 +283,7 @@ private fun BookInfoSection(book: Book) {
 }
 
 @Composable
-private fun InfoRow(
+internal fun InfoRow(
     label: String,
     value: String
 ) {
@@ -319,7 +318,7 @@ private fun InfoRow(
 }
 
 @Composable
-private fun ContinueButton(isEnabled: Boolean, onClicked: () -> Unit ) {
+internal fun SubmitButton(isEnabled: Boolean, buttonText: String, onClicked: () -> Unit) {
     Button(
         modifier = Modifier.padding(
             horizontal = 16.dp,
@@ -342,7 +341,7 @@ private fun ContinueButton(isEnabled: Boolean, onClicked: () -> Unit ) {
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
     ) {
         Text(
-            text = stringResource(Res.string.book_listing_button_looks_good),
+            text = buttonText,
             color = LocalContentColor.current,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
@@ -351,7 +350,10 @@ private fun ContinueButton(isEnabled: Boolean, onClicked: () -> Unit ) {
 }
 
 @Composable
-private fun DeliveryInformation(onCheckedChange: (Pair<DeliveryMethod, Boolean>) -> Unit) {
+internal fun DeliveryInformation(
+    map: Map<DeliveryMethod, Boolean>,
+    onCheckedChange: (Pair<DeliveryMethod, Boolean>) -> Unit,
+) {
     Column {
         Text(
             text = stringResource(Res.string.listing_delivery_method),
@@ -363,6 +365,7 @@ private fun DeliveryInformation(onCheckedChange: (Pair<DeliveryMethod, Boolean>)
 
         DeliveryMethodRow(
             deliveryMethodText = stringResource(Res.string.delivery_local_pickup),
+            defaultValue = map[DeliveryMethod.LocalPickup] ?: false,
             onCheckedChange = {
                 onCheckedChange(DeliveryMethod.LocalPickup to it)
             }
@@ -372,6 +375,7 @@ private fun DeliveryInformation(onCheckedChange: (Pair<DeliveryMethod, Boolean>)
 
         DeliveryMethodRow(
             deliveryMethodText = stringResource(Res.string.delivery_shipping),
+            defaultValue = map[DeliveryMethod.Shipping] ?: false,
             onCheckedChange = {
                 onCheckedChange(DeliveryMethod.Shipping to it)
             }
@@ -380,11 +384,12 @@ private fun DeliveryInformation(onCheckedChange: (Pair<DeliveryMethod, Boolean>)
 }
 
 @Composable
-private fun DeliveryMethodRow(
+internal fun DeliveryMethodRow(
     deliveryMethodText: String,
+    defaultValue: Boolean = false,
     onCheckedChange: (Boolean) -> Unit,
 ) {
-    var checked by remember { mutableStateOf(false) }
+    var checked by remember { mutableStateOf(defaultValue) }
 
     Row(
         modifier = Modifier

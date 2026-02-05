@@ -125,6 +125,7 @@ internal data class BookCardData(
     val author: String,
     val description: String,
     val coverColor: Color,
+    val listingId: String = "",
     val rating: Float = 5f,
     val coverUrl: String? = null,
     val viewCount: Int = 0,

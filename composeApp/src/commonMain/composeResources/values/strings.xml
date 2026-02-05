@@ -40,6 +40,7 @@
     <string name="failed_to_load_book">Failed to load book</string>
     <string name="listing_delivery_method">Delivery Method</string>
     <string name="book_listing_button_looks_good">Looks Good!</string>
+    <string name="book_listing_update">Update</string>
 
     <!-- Welcome Screen -->
     <string name="welcome_title">Welcome to Sahaf</string>

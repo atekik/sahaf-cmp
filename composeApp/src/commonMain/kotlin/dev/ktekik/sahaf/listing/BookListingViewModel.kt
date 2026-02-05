@@ -1,7 +1,6 @@
 package dev.ktekik.sahaf.listing
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dev.ktekik.sahaf.models.Book
 import dev.ktekik.sahaf.models.BookListing
 import dev.ktekik.sahaf.models.DeliveryMethod
@@ -11,6 +10,7 @@ import dev.ktekik.sahaf.usecases.CreateBookListingResult
 import dev.ktekik.sahaf.usecases.CreateBookListingUseCase
 import dev.ktekik.sahaf.usecases.FetchReaderIdZipcodePairUseCase
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.filterNotNull
@@ -30,7 +30,7 @@ sealed interface CreateBookListingScreenState {
 }
 
 @OptIn(ExperimentalUuidApi::class)
-class CreateBookListingViewModel(
+class BookListingViewModel(
     private val createBookListingUseCase: CreateBookListingUseCase,
     private val fetchReaderIdZipcodePairUseCase: FetchReaderIdZipcodePairUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
@@ -42,7 +42,7 @@ class CreateBookListingViewModel(
     private var bookListing: BookListing? = null
 
 
-    fun createBookListing(book: Book, deliveryMethodMap: Map<DeliveryMethod, Boolean>) {
+    fun createBookListing(book: Book, deliveryMethodMap: Map<DeliveryMethod, Boolean>, scope: CoroutineScope) {
         intent {
             reduce { CreateBookListingScreenState.Loading }
             val readerIdZipcodePair = fetchReaderIdZipcodePairUseCase.execute(Unit)
@@ -56,18 +56,28 @@ class CreateBookListingViewModel(
                 readerId = Uuid.parse(readerIdZipcodePair.id),
             )
 
-            postBookListing()
+            postBookListing(scope)
         }
     }
 
-    fun postBookListing() {
-        viewModelScope.launch(dispatcher) {
+    fun updateBookListing(updatedListing: BookListing, scope: CoroutineScope) {
+        intent {
+            reduce { CreateBookListingScreenState.Loading }
+
+            bookListing = updatedListing
+            postBookListing(scope)
+        }
+    }
+
+    internal fun postBookListing(scope: CoroutineScope) {
+        scope.launch(dispatcher) {
             bookListing?.let {
                 createBookListingUseCase.execute(it).collect { result ->
                     intent {
                         reduce {
                             when (result) {
                                 is CreateBookListingResult.Success -> {
+                                    bookListing = null
                                     CreateBookListingScreenState.Success(result.listing)
                                 }
 
@@ -82,7 +92,7 @@ class CreateBookListingViewModel(
         }
     }
 
-    private fun getDeliveryMethod(map: Map<DeliveryMethod, Boolean>): DeliveryMethod {
+    internal fun getDeliveryMethod(map: Map<DeliveryMethod, Boolean>): DeliveryMethod {
         return if (map[DeliveryMethod.LocalPickup] == true && map[DeliveryMethod.Shipping] == true) {
             DeliveryMethod.LocalPickupAndShipping
         } else if (map[DeliveryMethod.LocalPickup] == true) {

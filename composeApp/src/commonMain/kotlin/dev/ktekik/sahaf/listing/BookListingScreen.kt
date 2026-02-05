@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigationevent.NavigationEventInfo
@@ -18,17 +19,18 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import sahaf.composeapp.generated.resources.Res
 import sahaf.composeapp.generated.resources.failed_to_load_book
+import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
 fun BookListingScreen(
     isbn: String,
     onBackPressed: () -> Unit,
     isbnQueryViewModel: IsbnQueryViewModel = koinInject(),
-    createBookListingViewModel: CreateBookListingViewModel = koinInject(),
+    bookListingViewModel: BookListingViewModel = koinInject(),
 ) {
     val state by isbnQueryViewModel.container.stateFlow.collectAsStateWithLifecycle()
-    val listingState by createBookListingViewModel.container.stateFlow.collectAsStateWithLifecycle()
-
+    val listingState by bookListingViewModel.container.stateFlow.collectAsStateWithLifecycle()
+    val lifecycleCoroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(isbn) {
         isbnQueryViewModel.fetchBook(isbn)
@@ -41,10 +43,10 @@ fun BookListingScreen(
             onRetry = { isbnQueryViewModel.fetchBook(isbn) }
         )
 
-        is BookListingScreenState.Ready -> BookListingReadyScreen(
+        is BookListingScreenState.Ready -> BookListingCreationScreen(
             book = currentState.book,
             onContinuePressed = { book, map ->
-                createBookListingViewModel.createBookListing(book, map)
+                bookListingViewModel.createBookListing(book, map, lifecycleCoroutineScope)
             },
             onBackPressed = onBackPressed,
         )
@@ -53,12 +55,74 @@ fun BookListingScreen(
     when (val currentState = listingState) {
         is CreateBookListingScreenState.Idle -> Unit
         CreateBookListingScreenState.Loading -> BookListingLoadingScreen()
-        is CreateBookListingScreenState.Success -> createBookListingViewModel.navigateHome()
+        is CreateBookListingScreenState.Success -> bookListingViewModel.navigateHome()
         is CreateBookListingScreenState.Error -> BookListingErrorScreen(
             message = currentState.message,
-            onRetry = { createBookListingViewModel.postBookListing() },
+            onRetry = { bookListingViewModel.postBookListing(lifecycleCoroutineScope) },
             onBackPressed = {
-                createBookListingViewModel.onBackPressed()
+                bookListingViewModel.onBackPressed()
+            }
+        )
+    }
+}
+
+@OptIn(ExperimentalUuidApi::class)
+@Composable
+internal fun ListingDetailScreen(
+    listingId: String,
+    onBackPressed: () -> Unit,
+    listingDetailViewModel: ListingDetailViewModel = koinInject(),
+    bookListingViewModel: BookListingViewModel = koinInject(),
+) {
+    val state by listingDetailViewModel.container.stateFlow.collectAsStateWithLifecycle()
+    val listingState by bookListingViewModel.container.stateFlow.collectAsStateWithLifecycle()
+    val lifecycleCoroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(listingId) {
+        listingDetailViewModel.fetchListing(listingId)
+    }
+
+    when (val currentState = state) {
+        is ListingDetailScreenState.Loading -> BookListingLoadingScreen()
+        is ListingDetailScreenState.Error -> BookListingErrorScreen(
+            message = currentState.message,
+            onRetry = { listingDetailViewModel.fetchListing(listingId) }
+        )
+
+        is ListingDetailScreenState.Ready -> {
+            if (currentState.isSelf) {
+                BookListingUpdateScreen(
+                    bookListing = currentState.listing,
+                    onSubmitPressed = { book, map ->
+                        // update book listing with new delivery method
+                        // TODO add an option to delete the book listing and a dedicated callback
+                        bookListingViewModel.updateBookListing(
+                            book.copy(
+                                deliveryMethod = bookListingViewModel.getDeliveryMethod(
+                                    map
+                                )
+                            ),
+                            scope = lifecycleCoroutineScope
+                        )
+                    },
+                    onBackPressed = onBackPressed,
+                )
+            } else {
+                // Create BookListingReadOnlyScreen where the only option is to contact the owner of the book
+            }
+        }
+
+    }
+
+    when (val currentState = listingState) {
+        is CreateBookListingScreenState.Idle -> Unit
+        CreateBookListingScreenState.Loading -> BookListingLoadingScreen()
+        is CreateBookListingScreenState.Success -> bookListingViewModel.navigateHome()
+        is CreateBookListingScreenState.Error -> BookListingErrorScreen(
+            message = currentState.message,
+            onRetry = { bookListingViewModel.postBookListing(lifecycleCoroutineScope) },
+            onBackPressed = {
+                bookListingViewModel.onBackPressed()
             }
         )
     }
