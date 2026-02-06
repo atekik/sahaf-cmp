@@ -8,6 +8,7 @@ import dev.ktekik.sahaf.datastore.ReaderRepository
 import dev.ktekik.sahaf.getBaseUrl
 import dev.ktekik.sahaf.home.HomeViewModel
 import dev.ktekik.sahaf.listing.BookListingViewModel
+import dev.ktekik.sahaf.listing.DeleteBookListingViewModel
 import dev.ktekik.sahaf.listing.IsbnQueryViewModel
 import dev.ktekik.sahaf.listing.ListingDetailViewModel
 import dev.ktekik.sahaf.navigation.NavigationViewModel
@@ -16,6 +17,7 @@ import dev.ktekik.sahaf.usecases.FetchListingsWithShippingUseCase
 import dev.ktekik.sahaf.usecases.FetchReaderIdUseCase
 import dev.ktekik.sahaf.usecases.FetchReaderIdZipcodePairUseCase
 import dev.ktekik.sahaf.usecases.CreateBookListingUseCase
+import dev.ktekik.sahaf.usecases.DeleteBookListingUseCase
 import dev.ktekik.sahaf.usecases.IsbnQueryUseCase
 import dev.ktekik.sahaf.usecases.PostReaderUseCase
 import dev.ktekik.sahaf.usecases.QueryBookListingByIdUseCase
@@ -73,9 +75,11 @@ val commonModule = module {
 
     factory { QueryBookListingByIdUseCase(bookApi = get()) }
 
+    factory { DeleteBookListingUseCase(bookApi = get()) }
+
     single { NavigationViewModel(get()) }
 
-    single { HomeViewModel(get(), get()) }
+    factory { HomeViewModel(get(), get()) }
 
     factory { ReaderRegistryViewModel(postReaderUseCase = get(), saveReaderIdUseCase = get()) }
 
@@ -84,6 +88,8 @@ val commonModule = module {
     single { BookListingViewModel(createBookListingUseCase = get(), fetchReaderIdZipcodePairUseCase = get()) }
 
     factory { ListingDetailViewModel(queryBookListingByIdUseCase = get(), readerIdZipcodePairUseCase = get()) }
+
+    factory { DeleteBookListingViewModel(deleteBookListingUseCase = get()) }
 }
 
 fun initKoin(config: KoinAppDeclaration = {}) {

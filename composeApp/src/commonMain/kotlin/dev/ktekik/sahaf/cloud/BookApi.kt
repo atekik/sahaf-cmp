@@ -5,6 +5,7 @@ import dev.ktekik.sahaf.models.BookListing
 import dev.ktekik.sahaf.models.CursorPagedListings
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
@@ -30,6 +31,8 @@ interface BookApi {
     suspend fun createListing(bookListing: BookListing): Flow<ApiResult<BookListing>>
 
     suspend fun queryListingById(listingId: String): Flow<ApiResult<BookListing>>
+
+    suspend fun deleteListing(listingId: String): Flow<ApiResult<String>>
 }
 
 fun bookApiBuilder(httpClient: HttpClient, baseUrl: String = "http://192.168.68.67:8080"): BookApi =
@@ -116,6 +119,25 @@ private class BookApiImpl(
 
             if (response.status.isSuccess()) {
                 emit(ApiResult.Success(response.body()))
+            } else {
+                val errorBody = response.bodyAsText()
+                val errorMessage =
+                    "Request failed with status ${response.status}. Server said: $errorBody"
+                println(errorMessage)
+                emit(ApiResult.Error(message = errorMessage))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(ApiResult.Error(message = e.message))
+        }
+    }
+
+    override suspend fun deleteListing(listingId: String): Flow<ApiResult<String>> = flow {
+        try {
+            val response = httpClient.delete("$baseUrl/listings/$listingId")
+
+            if (response.status.isSuccess()) {
+                emit(ApiResult.Success(response.bodyAsText()))
             } else {
                 val errorBody = response.bodyAsText()
                 val errorMessage =

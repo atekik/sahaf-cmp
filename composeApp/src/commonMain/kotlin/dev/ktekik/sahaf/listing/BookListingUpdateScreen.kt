@@ -3,13 +3,18 @@ package dev.ktekik.sahaf.listing
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,14 +35,17 @@ import org.jetbrains.compose.resources.stringResource
 import sahaf.composeapp.generated.resources.Res
 import sahaf.composeapp.generated.resources.back
 import sahaf.composeapp.generated.resources.book_details
+import sahaf.composeapp.generated.resources.book_listing_delete
 import sahaf.composeapp.generated.resources.book_listing_update
+import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
 @Composable
 internal fun BookListingUpdateScreen(
     bookListing: BookListing,
     onSubmitPressed: (bookListing: BookListing, MutableMap<DeliveryMethod, Boolean>) -> Unit,
     onBackPressed: () -> Unit,
+    onDeletePressed: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -101,6 +109,42 @@ internal fun BookListingUpdateScreen(
             ) {
                 onSubmitPressed(bookListing, map)
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            DeleteButton{
+                onDeletePressed()
+            }
         }
+    }
+}
+
+@Composable
+private fun DeleteButton(onClicked: () -> Unit) {
+    Button(
+        modifier = Modifier.padding(
+            horizontal = 16.dp,
+        ).fillMaxWidth(),
+        onClick = {
+            onClicked()
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = 12.dp,
+            pressedElevation = 16.dp,
+            focusedElevation = 10.dp
+        ),
+        shape = MaterialTheme.shapes.extraLarge,
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+    ) {
+        Text(
+            text = stringResource(Res.string.book_listing_delete),
+            color = LocalContentColor.current,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold
+        )
     }
 }

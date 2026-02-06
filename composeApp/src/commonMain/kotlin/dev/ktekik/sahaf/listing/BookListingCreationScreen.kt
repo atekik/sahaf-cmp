@@ -322,7 +322,6 @@ internal fun SubmitButton(isEnabled: Boolean, buttonText: String, onClicked: () 
     Button(
         modifier = Modifier.padding(
             horizontal = 16.dp,
-            vertical = 128.dp
         ).fillMaxWidth(),
         onClick = {
             onClicked()
