@@ -54,7 +54,11 @@ internal fun ListingDetailScreen(
                     }
                 )
             } else {
-                // Create BookListingReadOnlyScreen where the only option is to contact the owner of the book
+                BookListingReadOnlyScreen(
+                    bookListing = currentState.listing,
+                    onBackPressed = onBackPressed,
+                    onContactPressed = {}
+                )
             }
         }
 

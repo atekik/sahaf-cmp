@@ -42,6 +42,7 @@
     <string name="book_listing_button_looks_good">Looks Good!</string>
     <string name="book_listing_update">Update</string>
     <string name="book_listing_delete">Delete</string>
+    <string name="book_listing_contact_user">Contact Reader</string>
 
     <!-- Welcome Screen -->
     <string name="welcome_title">Welcome to Sahaf</string>
