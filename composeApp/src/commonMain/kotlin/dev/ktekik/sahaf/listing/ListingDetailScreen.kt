@@ -37,14 +37,11 @@ internal fun ListingDetailScreen(
             if (currentState.isSelf) {
                 BookListingUpdateScreen(
                     bookListing = currentState.listing,
-                    onSubmitPressed = { book, map ->
+                    onSubmitPressed = { bookListing, map ->
                         // update book listing with new delivery method
                         bookListingViewModel.updateBookListing(
-                            book.copy(
-                                deliveryMethod = bookListingViewModel.getDeliveryMethod(
-                                    map
-                                )
-                            ),
+                            oldListing = bookListing,
+                            map = map,
                             scope = lifecycleCoroutineScope
                         )
                     },

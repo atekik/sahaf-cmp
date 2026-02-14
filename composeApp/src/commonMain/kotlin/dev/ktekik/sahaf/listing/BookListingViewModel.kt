@@ -60,11 +60,11 @@ class BookListingViewModel(
         }
     }
 
-    fun updateBookListing(updatedListing: BookListing, scope: CoroutineScope) {
+    fun updateBookListing(oldListing: BookListing, map: Map<DeliveryMethod, Boolean>, scope: CoroutineScope) {
         intent {
             reduce { CreateBookListingScreenState.Loading }
 
-            bookListing = updatedListing
+            bookListing = oldListing.copy(deliveryMethod = getDeliveryMethod(map))
             postBookListing(scope)
         }
     }
@@ -92,7 +92,7 @@ class BookListingViewModel(
         }
     }
 
-    internal fun getDeliveryMethod(map: Map<DeliveryMethod, Boolean>): DeliveryMethod {
+    private fun getDeliveryMethod(map: Map<DeliveryMethod, Boolean>): DeliveryMethod {
         return if (map[DeliveryMethod.LocalPickup] == true && map[DeliveryMethod.Shipping] == true) {
             DeliveryMethod.LocalPickupAndShipping
         } else if (map[DeliveryMethod.LocalPickup] == true) {

@@ -51,12 +51,12 @@ import sahaf.composeapp.generated.resources.delivery_shipping
 import sahaf.composeapp.generated.resources.ic_book_store
 import sahaf.composeapp.generated.resources.ic_home
 import sahaf.composeapp.generated.resources.ic_notification
-import sahaf.composeapp.generated.resources.ic_search
 import sahaf.composeapp.generated.resources.nav_book_store
 import sahaf.composeapp.generated.resources.nav_home
 import sahaf.composeapp.generated.resources.nav_notification
 import sahaf.composeapp.generated.resources.nav_scan
 import sahaf.composeapp.generated.resources.short_logo
+import sahaf.composeapp.generated.resources.ic_barcode
 import sahaf.composeapp.generated.resources.unknown_author
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -95,6 +95,9 @@ internal fun HomeReadyScreen(currentState: HomeScreenState.ReadyState, navigatio
                         navigationViewModel.onIsbnScanned(isbn)
                     }
                 }
+            }
+            2 -> {
+                // My Book Tab
             }
 
             else -> {
@@ -223,8 +226,8 @@ private fun HomeBottomNavigationBar(
             onClick = { onItemSelected(1) },
             icon = {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_search),
-                    contentDescription = stringResource(Res.string.nav_scan)
+                    painter = painterResource(Res.drawable.ic_barcode),
+                    contentDescription = stringResource(Res.string.nav_scan),
                 )
             },
             label = {
